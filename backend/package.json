@@ -1,0 +1,33 @@
+{
+  "name": "strategyalert-backend",
+  "version": "1.0.0",
+  "description": "StrategyAlert Backend API & Worker",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "dev:worker": "tsx watch src/worker/index.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "start:worker": "node dist/worker/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "razorpay": "^2.9.5",
+    "ws": "^8.18.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.5.14",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StrategyAlert.in - Elite Trading Notifications</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --color-bg: #222831;
+            --color-surface: #393E46;
+            --color-primary: #00ADB5;
+            --color-text: #EEEEEE;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 173, 181, 0.2), 0 0 10px rgba(0, 173, 181, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(0, 173, 181, 0.6), 0 0 30px rgba(0, 173, 181, 0.4); }
+        }
+
+        .animate-glow {
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-card {
+            background: rgba(57, 62, 70, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(238, 238, 238, 0.1);
+        }
+
+        .premium-gradient {
+            background: radial-gradient(circle at top right, rgba(0, 173, 181, 0.15), transparent 60%);
+        }
+
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .animate-glow, .animate-float, .parallax {
+                animation: none !important;
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#00ADB5",
+                        background: "#222831",
+                        surface: "#393E46",
+                        "on-surface": "#EEEEEE",
+                        "on-surface-variant": "#B0B8C1",
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    spacing: {
+                        'gutter': '24px',
+                        'margin-desktop': '64px',
+                        'margin-mobile': '16px',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-sans selection:bg-primary/30 selection:text-primary min-h-screen overflow-x-hidden">
+<nav class="fixed top-0 z-[100] w-full h-20 bg-background/80 backdrop-blur-md border-b border-white/5">
+<div class="max-w-7xl mx-auto h-full px-gutter flex justify-between items-center">
+<a class="text-2xl font-bold tracking-tight text-primary flex items-center gap-2" href="#">
+<span class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="hub">hub</span>
+</span>
+            StrategyAlert.in
+        </a>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors" href="#features">Features</a>
+<a class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+<a class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors" href="#pricing">Pricing</a>
+</div>
+<div class="flex items-center gap-6">
+<a class="hidden sm:block text-sm font-medium text-on-surface-variant hover:text-primary transition-colors" href="#">Login</a>
+<a class="px-5 py-2.5 bg-primary text-background text-sm font-bold rounded hover:opacity-90 transition-all animate-glow" href="#">Create Free Alert</a>
+</div>
+</div>
+</nav>
+<main class="relative">
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center pt-32 pb-20 px-margin-mobile md:px-gutter overflow-hidden premium-gradient">
+<div class="parallax absolute top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none" data-speed="0.05">
+<div class="absolute top-[20%] right-[10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[10%] left-[5%] w-[300px] h-[300px] bg-surface/40 rounded-full blur-[80px]"></div>
+</div>
+<div class="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center">
+<div class="reveal">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface text-primary text-xs font-bold tracking-widest uppercase mb-6 border border-white/10">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                    Institutional Setup Monitoring
+                </div>
+<h1 class="text-5xl md:text-7xl font-bold leading-[1.1] mb-8 text-balance">
+                    Never Miss Your <span class="text-primary">Setup</span> Again.
+                </h1>
+<p class="text-lg md:text-xl text-on-surface-variant mb-10 max-w-xl leading-relaxed">
+                    The elite monitoring tool for price levels, candlestick patterns, and timeframes. StrategyAlert notifies you instantly when your setup confirms.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-primary text-background font-bold rounded hover:scale-105 transition-transform flex items-center gap-2">
+                        Get Started Free
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="px-8 py-4 border border-white/20 hover:bg-white/5 font-bold rounded transition-colors flex items-center gap-2">
+                        Watch Demo
+                    </button>
+</div>
+</div>
+<div class="reveal relative delay-200">
+<div class="parallax relative z-10" data-speed="0.08">
+<!-- High-Fidelity Alert Creation UI -->
+<div class="glass-card rounded-3xl p-8 shadow-2xl border-white/10 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-48 h-48 bg-primary/10 blur-[80px] -z-10 group-hover:bg-primary/20 transition-all duration-700"></div>
+<div class="flex items-center justify-between mb-10">
+<div>
+<h3 class="text-xl font-bold">Create New Alert</h3>
+<p class="text-xs text-on-surface-variant font-medium">Define your institutional setup</p>
+</div>
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-white/10"></div>
+<div class="w-2 h-2 rounded-full bg-white/10"></div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Symbol</label>
+<div class="flex items-center gap-3 p-3 bg-background/60 rounded-xl border border-white/5 group/input hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="currency_bitcoin">currency_bitcoin</span>
+<span class="text-sm font-mono font-medium">BTCUSDT</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Price Level</label>
+<div class="flex items-center gap-3 p-3 bg-background/60 rounded-xl border border-white/5 group/input hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="ads_click">ads_click</span>
+<span class="text-sm font-mono font-medium">71,250.00</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Pattern</label>
+<div class="flex items-center gap-3 p-3 bg-background/60 rounded-xl border border-white/5 group/input hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="rebase">rebase</span>
+<span class="text-sm font-medium">Hammer Candle</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Timeframe</label>
+<div class="flex items-center gap-3 p-3 bg-background/60 rounded-xl border border-white/5 group/input hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="schedule">schedule</span>
+<span class="text-sm font-medium">15 Minute</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-background font-bold rounded-xl mt-4 flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(0,173,181,0.4)] transition-all">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+                                Activate Strategy Alert
+                            </button>
+</div>
+</div>
+<!-- Spoken Alert Preview Floating UI -->
+<div class="animate-float absolute -bottom-10 -left-12 glass-card p-5 rounded-2xl shadow-2xl border-primary/40 bg-background/80 z-20 hidden md:block max-w-[280px]">
+<div class="flex items-start gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="volume_up">volume_up</span>
+</div>
+<div class="absolute -top-1 -right-1 flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-primary font-black uppercase tracking-[0.2em] mb-1">Spoken Alert</p>
+<div class="flex gap-1 mb-2">
+<div class="h-1 w-2 bg-primary rounded-full"></div>
+<div class="h-1 w-4 bg-primary/40 rounded-full"></div>
+<div class="h-1 w-3 bg-primary/60 rounded-full"></div>
+<div class="h-1 w-2 bg-primary rounded-full"></div>
+</div>
+<p class="text-[13px] font-medium leading-tight text-on-surface">"BTC hit 71,250 and formed a Hammer candle..."</p>
+</div>
+</div>
+</div>
+<!-- Extra Context Pill -->
+<div class="animate-float absolute -top-6 right-0 glass-card px-4 py-2 rounded-full border-white/10 shadow-lg z-20 flex items-center gap-2" style="animation-delay: 2s;">
+<span class="w-2 h-2 rounded-full bg-green-400"></span>
+<span class="text-xs font-bold tracking-tight">Institutional Logic Live</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Problem Section -->
+<section class="py-32 px-margin-mobile md:px-gutter bg-background/50">
+<div class="max-w-4xl mx-auto text-center mb-20 reveal">
+<h2 class="text-3xl md:text-5xl font-bold mb-6">The Blind Spot in Trading Alerts</h2>
+<p class="text-on-surface-variant text-lg">Most alerts just watch a line. We watch the context of your trading plan.</p>
+</div>
+<div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-stretch">
+<div class="reveal glass-card p-10 rounded-3xl border-white/5 flex flex-col justify-between">
+<div>
+<span class="inline-block p-3 rounded-xl bg-red-500/10 text-red-500 mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="notifications_off">notifications_off</span>
+</span>
+<h3 class="text-2xl font-bold mb-4">Generic Price Alerts</h3>
+<p class="text-on-surface-variant mb-8">Standard platforms tell you price crossed a level, leaving you to guess the rest.</p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-red-400" data-icon="cancel">cancel</span>
+<span class="text-sm font-medium">Was it a breakout or a fakeout?</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-red-400" data-icon="cancel">cancel</span>
+<span class="text-sm font-medium">Forces immediate manual chart inspection</span>
+</div>
+</div>
+</div>
+<div class="reveal delay-200 p-[1px] rounded-3xl bg-gradient-to-br from-primary/50 to-transparent">
+<div class="h-full glass-card p-10 rounded-[23px] flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full"></div>
+<div>
+<span class="inline-block p-3 rounded-xl bg-primary/10 text-primary mb-6">
+<span class="material-symbols-outlined text-3xl" data-icon="verified">verified</span>
+</span>
+<h3 class="text-2xl font-bold mb-4 text-primary">Strategy-Based Context</h3>
+<p class="text-on-surface-variant mb-8">We deliver the full story. Know exactly what happened before you even open your terminal.</p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3 p-4 bg-primary/10 rounded-xl border border-primary/20">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+<span class="text-sm font-medium">Confirmation of Pattern + Level + Timeframe</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-primary/10 rounded-xl border border-primary/20">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle">check_circle</span>
+<span class="text-sm font-medium">Audio delivery keeps your focus on execution</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-32 px-margin-mobile md:px-gutter" id="how-it-works">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-24 reveal">
+<h2 class="text-4xl font-bold mb-4">Setup Alerts in Seconds</h2>
+<p class="text-on-surface-variant">Simple mode design for maximum efficiency.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-12">
+<div class="reveal group text-center">
+<div class="w-20 h-20 mx-auto mb-8 rounded-full bg-surface border border-white/5 flex items-center justify-center group-hover:border-primary transition-colors duration-500">
+<span class="material-symbols-outlined text-3xl" data-icon="currency_bitcoin">currency_bitcoin</span>
+</div>
+<h3 class="text-xl font-bold mb-4">1. Choose Symbol</h3>
+<p class="text-on-surface-variant">Select from top crypto pairs with real-time liquidity tracking.</p>
+</div>
+<div class="reveal delay-200 group text-center relative">
+<div class="hidden md:block absolute top-10 -right-6 w-12 h-[1px] bg-white/10"></div>
+<div class="w-20 h-20 mx-auto mb-8 rounded-full bg-surface border border-white/5 flex items-center justify-center group-hover:border-primary transition-colors duration-500">
+<span class="material-symbols-outlined text-3xl" data-icon="settings_input_component">settings_input_component</span>
+</div>
+<h3 class="text-xl font-bold mb-4">2. Configure Setup</h3>
+<p class="text-on-surface-variant">Input your price level, choose a candlestick pattern and timeframe.</p>
+</div>
+<div class="reveal delay-400 group text-center">
+<div class="w-20 h-20 mx-auto mb-8 rounded-full bg-surface border border-white/5 flex items-center justify-center group-hover:border-primary transition-colors duration-500">
+<span class="material-symbols-outlined text-3xl" data-icon="volume_up">volume_up</span>
+</div>
+<h3 class="text-xl font-bold mb-4">3. Hear the Alert</h3>
+<p class="text-on-surface-variant">Receive browser notifications and crystal clear spoken setup messages.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Demo Preview -->
+<section class="py-32 bg-surface/30 px-margin-mobile md:px-gutter overflow-hidden">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+<div class="reveal">
+<h2 class="text-4xl font-bold mb-8">Hear Your Setup Before You See It.</h2>
+<p class="text-on-surface-variant text-lg mb-10 leading-relaxed">
+                    StrategyAlert uses native browser text-to-speech to narrate your setups. Experience the clarity that professional traders demand.
+                </p>
+<div class="glass-card p-6 rounded-2xl border-primary/20 bg-primary/5">
+<p class="text-xs font-bold text-primary uppercase tracking-widest mb-4">Interactive Preview</p>
+<div class="flex items-center gap-4 p-4 bg-background/50 rounded-xl mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="graphic_eq">graphic_eq</span>
+<p class="font-mono text-sm">"BTC hit 71,250 and formed a Hammer candle on 15m timeframe."</p>
+</div>
+<button class="w-full py-4 bg-primary text-background font-bold rounded flex items-center justify-center gap-2 hover:opacity-90 transition-opacity" id="demo-speak">
+<span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+                        Test Spoken Alert
+                    </button>
+</div>
+</div>
+<div class="reveal delay-200">
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card p-6 rounded-2xl border-white/5 animate-float" style="animation-delay: 1s">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="bolt">bolt</span>
+<h4 class="font-bold mb-2">Real-time Monitoring</h4>
+<p class="text-xs text-on-surface-variant">Sub-second evaluation on candle close.</p>
+</div>
+<div class="glass-card p-6 rounded-2xl border-white/5 mt-8 animate-float">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="history">history</span>
+<h4 class="font-bold mb-2">Comprehensive History</h4>
+<p class="text-xs text-on-surface-variant">Full logs of every trigger and price point.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-32 px-margin-mobile md:px-gutter" id="pricing">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20 reveal">
+<h2 class="text-4xl font-bold mb-4">Elite Plans for Every Trader</h2>
+<p class="text-on-surface-variant">From casual monitoring to professional grade capacity.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Free Plan -->
+<div class="reveal glass-card p-10 rounded-3xl flex flex-col">
+<h3 class="text-xl font-bold mb-2">Free</h3>
+<div class="text-4xl font-bold mb-8">₹0<span class="text-sm font-normal text-on-surface-variant">/mo</span></div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                            Up to 3 active alerts
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                            Crypto symbols only
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                            Spoken notifications
+                        </li>
+</ul>
+<button class="w-full py-3 border border-white/20 rounded-xl hover:bg-white/5 font-bold transition-colors">Start Free</button>
+</div>
+<!-- Pro Plan -->
+<div class="reveal delay-200 relative p-[1px] rounded-3xl bg-gradient-to-b from-primary to-transparent">
+<div class="h-full glass-card p-10 rounded-[23px] flex flex-col bg-surface/60">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-background text-[10px] font-bold uppercase tracking-widest rounded-full">Most Popular</div>
+<h3 class="text-xl font-bold mb-2">Pro Monthly</h3>
+<div class="text-4xl font-bold mb-8">₹299<span class="text-sm font-normal text-on-surface-variant">/mo</span></div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                                Up to 25 active alerts
+                            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                                Advanced History Retention
+                            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                                Priority Monitoring
+                            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                                Priority Support
+                            </li>
+</ul>
+<button class="w-full py-4 bg-primary text-background rounded-xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20">Upgrade Now</button>
+</div>
+</div>
+<!-- Annual Plan -->
+<div class="reveal delay-400 glass-card p-10 rounded-3xl flex flex-col">
+<h3 class="text-xl font-bold mb-2">Annual</h3>
+<div class="text-4xl font-bold mb-8">₹2,499<span class="text-sm font-normal text-on-surface-variant">/yr</span></div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                            All Pro Features
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                            Save 30% vs Monthly
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+                            Early access to Beta features
+                        </li>
+</ul>
+<button class="w-full py-3 border border-white/20 rounded-xl hover:bg-white/5 font-bold transition-colors">Go Annual</button>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="py-32 bg-background px-margin-mobile md:px-gutter" id="faq">
+<div class="max-w-3xl mx-auto">
+<h2 class="text-3xl font-bold mb-16 text-center">Frequently Asked Questions</h2>
+<div class="space-y-6">
+<div class="reveal glass-card p-8 rounded-2xl border-white/5">
+<h4 class="text-lg font-bold mb-3">Does it work if my browser is closed?</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Spoken alerts require an active browser session. However, browser notifications will still trigger if your browser is running in the background.</p>
+</div>
+<div class="reveal glass-card p-8 rounded-2xl border-white/5">
+<h4 class="text-lg font-bold mb-3">What symbols do you support?</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">At launch, we support the top 10 most liquid crypto pairs including BTC, ETH, SOL, and others from major exchanges.</p>
+</div>
+<div class="reveal glass-card p-8 rounded-2xl border-white/5">
+<h4 class="text-lg font-bold mb-3">How accurate is pattern detection?</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">We use institutional-grade candle logic that evaluates precisely on the closing tick of each candle timeframe to ensure high reliability.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-background border-t border-white/5 py-20 px-margin-mobile md:px-gutter">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+<div class="space-y-4 text-center md:text-left">
+<a class="text-2xl font-bold text-primary flex items-center justify-center md:justify-start gap-2" href="#">
+                StrategyAlert.in
+            </a>
+<p class="text-sm text-on-surface-variant max-w-xs">Never miss your setup again. The elite monitoring tool for the modern trader.</p>
+<p class="text-xs text-white/20">© 2024 StrategyAlert.in. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 md:gap-12">
+<div class="space-y-4">
+<h5 class="text-xs font-bold uppercase tracking-widest text-primary">Platform</h5>
+<nav class="flex flex-col gap-2">
+<a class="text-sm text-on-surface-variant hover:text-white transition-colors" href="#">Dashboard</a>
+<a class="text-sm text-on-surface-variant hover:text-white transition-colors" href="#">Pricing</a>
+<a class="text-sm text-on-surface-variant hover:text-white transition-colors" href="#">Features</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h5 class="text-xs font-bold uppercase tracking-widest text-primary">Legal</h5>
+<nav class="flex flex-col gap-2">
+<a class="text-sm text-on-surface-variant hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm text-on-surface-variant hover:text-white transition-colors" href="#">Terms of Service</a>
+</nav>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    // Intersection Observer for Reveal Animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Parallax Effect
+    window.addEventListener('scroll', () => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        
+        const parallaxElements = document.querySelectorAll('.parallax');
+        const scrolled = window.pageYOffset;
+
+        parallaxElements.forEach(el => {
+            const speed = el.getAttribute('data-speed');
+            el.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
+
+    // Demo Speak Button
+    const speakBtn = document.getElementById('demo-speak');
+    if (speakBtn) {
+        speakBtn.addEventListener('click', () => {
+            const text = "BTC hit 71,250 and formed a Hammer candle on 15m timeframe.";
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        });
+    }
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+</script>
+</body></html>
