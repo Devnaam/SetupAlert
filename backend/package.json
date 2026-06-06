@@ -1,7 +1,7 @@
 {
-  "name": "strategyalert-backend",
+  "name": "setupalert-backend",
   "version": "1.0.0",
-  "description": "StrategyAlert Backend API & Worker",
+  "description": "SetupAlert Backend API & Worker",
   "main": "dist/app.js",
   "scripts": {
     "dev": "tsx watch src/app.ts",

@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
  </svg>
  </div>
  <span className="text-xl font-bold gradient-text">
- StrategyAlert
+ SetupAlert
  </span>
  </Link>
  </div>

@@ -22,7 +22,7 @@ export function Footer() {
  <Bell className="h-4 w-4 text-text" />
  </div>
  <span className="text-lg font-bold bg-brand bg-clip-text text-transparent">
- StrategyAlert
+ SetupAlert
  </span>
  </Link>
  <p className="text-sm text-gray-500 max-w-xs text-center md:text-left">
@@ -47,7 +47,7 @@ export function Footer() {
  {/* Copyright */}
  <div className="mt-8 pt-8 border-t border-surface text-center">
  <p className="text-xs text-gray-600">
- &copy; {currentYear} StrategyAlert. All rights reserved.
+ &copy; {currentYear} SetupAlert. All rights reserved.
  </p>
  </div>
  </div>

@@ -1,12 +1,12 @@
-# StrategyAlert Product Specification
+# SetupAlert Product Specification
 
 ## Product Overview
 
-**Product Name:** StrategyAlert  
-**Domain:** strategyalert.in  
+**Product Name:** SetupAlert  
+**Domain:** setupalert.in  
 **Tagline:** Never Miss Your Setup Again.
 
-StrategyAlert is a real-time trading alert platform that helps traders stop watching charts all day by monitoring their exact setup and delivering spoken notifications when the setup forms. The launch version is intentionally focused on **Simple Mode**, which lets a trader create an alert using **symbol + price level + candlestick pattern + timeframe** and receive a browser notification plus spoken text-to-speech alert when the condition matches.
+SetupAlert is a real-time trading alert platform that helps traders stop watching charts all day by monitoring their exact setup and delivering spoken notifications when the setup forms. The launch version is intentionally focused on **Simple Mode**, which lets a trader create an alert using **symbol + price level + candlestick pattern + timeframe** and receive a browser notification plus spoken text-to-speech alert when the condition matches.
 
 The product is designed for fast launch, working monetization, and clean user experience first. Advanced multi-condition strategy logic will come later as a separate **Advanced Mode**, but it is not part of the launch scope.
 
@@ -14,7 +14,7 @@ The product is designed for fast launch, working monetization, and clean user ex
 
 ## Core Product Vision
 
-StrategyAlert should feel like a focused trader utility, not a bloated trading terminal.
+SetupAlert should feel like a focused trader utility, not a bloated trading terminal.
 
 The first version should do one thing extremely well:
 
@@ -40,7 +40,7 @@ Example setup:
 
 Current trading tools usually provide generic price alerts, but they do not clearly narrate the full setup context. Because of this, traders still need to reopen charts and manually inspect what happened. This causes missed entries, delayed reactions, and unnecessary screen-watching.
 
-StrategyAlert solves this by turning a setup into a direct spoken event.
+SetupAlert solves this by turning a setup into a direct spoken event.
 
 Example alert:
 
@@ -229,7 +229,7 @@ Headline:
 
 Subheadline:
 
-- Create setup-based spoken market alerts using level, candlestick pattern, and timeframe. StrategyAlert watches the market and tells you exactly when your setup appears.
+- Create setup-based spoken market alerts using level, candlestick pattern, and timeframe. SetupAlert watches the market and tells you exactly when your setup appears.
 
 CTA:
 
@@ -1122,7 +1122,7 @@ If anything has to be delayed, delay visual polish before delaying core alert re
 
 ## Final Build Instruction Summary
 
-Build StrategyAlert as a production-ready MVP for launch using **Simple Mode only**.
+Build SetupAlert as a production-ready MVP for launch using **Simple Mode only**.
 
 The delivered platform must include fully working:
 

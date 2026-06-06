@@ -59,7 +59,7 @@ export function useBilling(): UseBillingReturn {
       const options: RazorpayOptions = {
         key: data.razorpayKey,
         subscription_id: data.subscriptionId,
-        name: 'StrategyAlert',
+        name: 'SetupAlert',
         description: `${planName.charAt(0).toUpperCase() + planName.slice(1)} Plan - ${billingCycle}`,
         image: '/logo.png',
         handler: async (response) => {

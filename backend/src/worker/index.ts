@@ -279,7 +279,7 @@ function setupGracefulShutdown(): void {
 }
 
 async function start(): Promise<void> {
-  logger.info('StrategyAlert Worker starting...');
+  logger.info('SetupAlert Worker starting...');
 
   candleCache = new CandleCache();
   cooldownTracker = new CooldownTracker();

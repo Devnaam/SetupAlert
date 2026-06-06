@@ -83,12 +83,12 @@ app.use(
 
 // Start server
 app.listen(PORT, () => {
-  logger.info(`StrategyAlert API server started`, {
+  logger.info(`SetupAlert API server started`, {
     port: PORT,
     environment: process.env.NODE_ENV || "development",
     frontendUrl: process.env.FRONTEND_URL || "http://localhost:3000",
   });
-  console.log(`🚀 StrategyAlert API running on port ${PORT}`);
+  console.log(`🚀 SetupAlert API running on port ${PORT}`);
 });
 
 export { app };

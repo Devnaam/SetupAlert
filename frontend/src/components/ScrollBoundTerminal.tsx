@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -40,7 +40,9 @@ export default function ScrollBoundTerminal() {
     };
   }, []);
 
-  useEffect(() => {
+  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+  useIsomorphicLayoutEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
@@ -109,10 +111,11 @@ export default function ScrollBoundTerminal() {
       // (the remaining 12% of scroll == the built-in delay / snapping hold)
 
       const draw = (progress: number) => {
-        const w = canvasRef.current!.clientWidth;
-        const h = canvasRef.current!.clientHeight;
-        if (canvasRef.current!.width  !== w) canvasRef.current!.width  = w;
-        if (canvasRef.current!.height !== h) canvasRef.current!.height = h;
+        if (!canvasRef.current) return;
+        const w = canvasRef.current.clientWidth;
+        const h = canvasRef.current.clientHeight;
+        if (canvasRef.current.width  !== w) canvasRef.current.width  = w;
+        if (canvasRef.current.height !== h) canvasRef.current.height = h;
 
         ctx.clearRect(0, 0, w, h);
 

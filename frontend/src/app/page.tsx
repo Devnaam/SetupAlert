@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import ScrollBoundTerminal from "../components/ScrollBoundTerminal";
 import BentoFeatures from "../components/BentoFeatures";
 import PatternsSection from "../components/PatternsSection";
+import Footer from "@/components/Footer";
+import VoiceDemoForm from "../components/VoiceDemoForm";
+import PricingSection from "@/components/PricingSection";
 
 const CustomCSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap');
@@ -153,7 +156,9 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
+  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+  useIsomorphicLayoutEffect(() => {
     let cleanupGsap: any;
     const checkGsap = setInterval(() => {
       if (typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
@@ -344,7 +349,7 @@ export default function LandingPage() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
             </svg>
-            <span className="font-heading font-bold text-[20px] text-[var(--color-text)] tracking-tight">StrategyAlert</span>
+            <span className="font-heading font-bold text-[20px] text-[var(--color-text)] tracking-tight">SetupAlert</span>
           </div>
 
           <div className="hidden md:flex items-center gap-8">
@@ -407,7 +412,7 @@ export default function LandingPage() {
             </div>
             <div data-speed="-18" className="flex flex-col items-start gap-6 w-full">
               <p className="text-[var(--color-text-muted)] text-[18px] max-w-lg leading-relaxed">
-                StrategyAlert watches the market for your exact setup — price level, candlestick pattern, timeframe — and speaks the alert the moment it forms.
+                SetupAlert watches the market for your exact setup — price level, candlestick pattern, timeframe — and speaks the alert the moment it forms.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <Link href="/alerts" className="min-h-[48px] inline-flex items-center justify-center bg-[var(--color-accent)] text-[var(--color-btn-text)] px-8 rounded-md text-[16px] font-medium hover:opacity-90 transition-opacity focus-ring outline-none">
@@ -475,7 +480,7 @@ export default function LandingPage() {
                   <div className="absolute left-[-42px] top-2 w-2 h-2 rounded-full bg-[var(--color-bg-deep)] border-2 border-[var(--color-accent)] z-10"></div>
                   <h3 className="font-heading font-bold text-[28px] text-[var(--color-text)] mb-4">We Watch 24/7</h3>
                   <p className="text-[var(--color-text-muted)] text-[16px] leading-relaxed">
-                    Close your charts. StrategyAlert connects directly to exchange websockets and evaluates every single tick and closed candle against your exact mathematical constraints.
+                    Close your charts. SetupAlert connects directly to exchange websockets and evaluates every single tick and closed candle against your exact mathematical constraints.
                   </p>
                 </div>
                 {/* Step 3 */}
@@ -575,10 +580,8 @@ export default function LandingPage() {
       {/* SECTION 6 — Live Voice Demo */}
       <section className="bg-[var(--color-bg-card)] py-24 border-y border-[var(--color-border)] relative z-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="font-heading font-bold text-[36px] text-[var(--color-text)] mb-2">Hear What Your Alert Sounds Like</h2>
-          <p className="text-[var(--color-text-muted)] text-[16px] mb-12">No signup required.</p>
           
-          <VoiceDemoForm isGlobalMuted={isMuted} setIsGlobalMuted={setIsMuted} />
+          <VoiceDemoForm />
 
           <div className="mt-12">
             <Link href="/alerts" className="text-[var(--color-accent)] hover:underline font-medium focus-ring outline-none rounded-sm">
@@ -592,82 +595,7 @@ export default function LandingPage() {
       <PatternsSection />
 
       {/* SECTION 8 — Pricing */}
-      <section id="pricing" className="bg-[var(--color-bg-deep)] py-24 md:py-32 border-t border-[var(--color-border)] relative z-20">
-        <div className="absolute inset-0 opacity-[0.02]" data-speed="-6" style={{ backgroundImage: "linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px)", backgroundSize: "60px 60px" }}></div>
-        <div className="max-w-5xl mx-auto px-6 relative z-10">
-          <div data-speed="-8" className="mb-12">
-            <h2 className="font-heading font-bold text-[36px] md:text-[48px] text-[var(--color-text)] text-center mb-12">Simple, Transparent Pricing</h2>
-            
-            <div className="flex justify-center">
-              <div className="bg-[var(--color-bg-card)] p-1 rounded-lg border border-[var(--color-border)] inline-flex">
-                <button 
-                  onClick={() => setPricingMode("monthly")}
-                  className={`px-6 py-2 rounded-md text-[14px] font-medium transition-colors focus-ring outline-none ${pricingMode === "monthly" ? "bg-[var(--color-bg-deep)] text-[var(--color-text)] shadow" : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"}`}
-                >
-                  Monthly
-                </button>
-                <button 
-                  onClick={() => setPricingMode("annual")}
-                  className={`px-6 py-2 rounded-md text-[14px] font-medium transition-colors focus-ring outline-none ${pricingMode === "annual" ? "bg-[var(--color-bg-deep)] text-[var(--color-text)] shadow" : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"}`}
-                >
-                  Annual
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-            {/* Free */}
-            <div className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] p-8" data-speed="-12">
-              <h3 className="font-heading font-bold text-[24px] text-[var(--color-text)] mb-2">Free</h3>
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="font-heading font-bold text-[40px] text-[var(--color-text)]">₹0</span>
-                <span className="text-[var(--color-text-muted)]">/month</span>
-              </div>
-              <ul className="space-y-4 mb-8 text-[14px] text-[var(--color-text-muted)]">
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 3 active alerts</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 10 symbols</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Browser voice alerts</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Basic history</li>
-              </ul>
-              <Link href="/signup" className="w-full block text-center min-h-[44px] leading-[44px] bg-transparent text-[var(--color-text)] border border-[var(--color-text)] border-opacity-20 hover:border-opacity-40 rounded-md text-[14px] font-medium transition-colors focus-ring outline-none">
-                Get Started Free
-              </Link>
-            </div>
-
-            {/* Pro */}
-            <div className="bg-[var(--color-bg-card)] rounded-xl border-x border-b border-t-[2px] border-t-[var(--color-accent)] border-[var(--color-border)] p-8 relative shadow-2xl bg-[var(--color-accent-glow)]/10" data-speed="-16">
-              <div className="absolute top-0 right-8 -translate-y-1/2 bg-[var(--color-accent)] text-[var(--color-btn-text)] text-[12px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                {pricingMode === "annual" ? "Best Value" : "Most Popular"}
-              </div>
-              <h3 className="font-heading font-bold text-[24px] text-[var(--color-text)] mb-2">Pro</h3>
-              <div className="flex items-baseline gap-1 mb-1">
-                <span className="font-heading font-bold text-[40px] text-[var(--color-text)]">
-                  {pricingMode === "monthly" ? "₹299" : "₹208"}
-                </span>
-                <span className="text-[var(--color-text-muted)]">/month</span>
-              </div>
-              {pricingMode === "annual" ? (
-                <div className="text-[12px] text-[var(--color-accent)] mb-5 font-medium h-5">Billed ₹2,499 yearly. Save 2 months.</div>
-              ) : (
-                <div className="h-5 mb-5"></div>
-              )}
-              
-              <ul className="space-y-4 mb-8 text-[14px] text-[var(--color-text)]">
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> 25 active alerts</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> All symbols supported</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> All alert types (Level + Pattern)</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Full trigger history</li>
-                <li className="flex gap-2 items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Voice preview testing</li>
-              </ul>
-              
-              <Link href="/signup" className="w-full block text-center min-h-[44px] leading-[44px] bg-[var(--color-accent)] text-[var(--color-btn-text)] rounded-md text-[14px] font-medium hover:opacity-90 transition-opacity focus-ring outline-none">
-                {pricingMode === "monthly" ? "Start Pro" : "Start Annual"}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PricingSection />
 
       {/* SECTION 9 — FAQ (No Parallax) */}
       <section id="faq" className="bg-[var(--color-bg-card)] py-24 md:py-32 border-y border-[var(--color-border)] relative z-30">
@@ -677,14 +605,14 @@ export default function LandingPage() {
           <div className="flex flex-col border-t border-[var(--color-border)]">
             <FaqItem 
               question="What happens if I close the browser tab?" 
-              answer="Your alerts are evaluated 24/7 on our backend servers regardless of whether your browser is open. However, because browser security policies require an active tab to play audio, you must keep the StrategyAlert dashboard open in a tab to hear the spoken notifications. Triggers will still be logged to your history even if closed." 
+              answer="Your alerts are evaluated 24/7 on our backend servers regardless of whether your browser is open. However, because browser security policies require an active tab to play audio, you must keep the SetupAlert dashboard open in a tab to hear the spoken notifications. Triggers will still be logged to your history even if closed." 
             />
             <FaqItem 
               question="How fast does the alert trigger after a candle closes?" 
               answer="Near-instantaneously. Our backend streams real-time tick data directly via Binance WebSockets. The moment the exchange broadcasts the final 'close' tick for your selected timeframe, our engine evaluates the pattern mathematically and dispatches the alert to your browser via a secure WebSocket within milliseconds." 
             />
             <FaqItem 
-              question="Does StrategyAlert work for NSE or Indian stocks?" 
+              question="Does SetupAlert work for NSE or Indian stocks?" 
               answer="Currently, we exclusively support crypto markets via Binance. We are actively developing integrations for NSE and other traditional markets to be released in future updates." 
             />
             <FaqItem 
@@ -697,7 +625,7 @@ export default function LandingPage() {
             />
             <FaqItem 
               question="How is this different from TradingView alerts?" 
-              answer="TradingView relies heavily on generic beeps, popups, or webhooks that require manual setup or third-party integrations to be useful. StrategyAlert is purpose-built for audio context. You don't have to scramble to find the right tab; our system speaks the exact context of the trigger out loud, keeping your eyes free." 
+              answer="TradingView relies heavily on generic beeps, popups, or webhooks that require manual setup or third-party integrations to be useful. SetupAlert is purpose-built for audio context. You don't have to scramble to find the right tab; our system speaks the exact context of the trigger out loud, keeping your eyes free." 
             />
             <FaqItem 
               question="Is my data private and secure?" 
@@ -720,7 +648,7 @@ export default function LandingPage() {
         <div className="relative z-10 text-center px-6 max-w-2xl">
           <h2 data-speed="-12" className="font-heading font-bold text-[40px] md:text-[56px] text-[var(--color-text)] mb-6 leading-[1.1]">Your setup is forming right now.</h2>
           <div data-speed="-18" className="flex flex-col items-center">
-            <p className="text-[var(--color-text-muted)] text-[18px] mb-10">StrategyAlert is watching.</p>
+            <p className="text-[var(--color-text-muted)] text-[18px] mb-10">SetupAlert is watching.</p>
             <Link href="/alerts" className="min-h-[52px] inline-flex items-center justify-center bg-[var(--color-accent)] text-[var(--color-btn-text)] px-10 rounded-md text-[18px] font-bold hover:opacity-90 transition-opacity focus-ring outline-none shadow-lg">
               Create Your First Alert — It's Free
             </Link>
@@ -729,55 +657,7 @@ export default function LandingPage() {
       </section>
 
       {/* SECTION 11 — Footer */}
-      <footer className="bg-[var(--color-bg-deep)] border-t border-[var(--color-border)] pt-16 pb-8 px-6 relative z-30">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-              <span className="font-heading font-bold text-[20px] text-[var(--color-text)] tracking-tight">StrategyAlert</span>
-            </div>
-            <p className="text-[14px] text-[var(--color-text-muted)] mb-6">Never Miss Your Setup Again.</p>
-            <button onClick={toggleTheme} className="text-[12px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] flex items-center gap-2 transition-colors focus-ring outline-none rounded-sm">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
-              Toggle Theme
-            </button>
-          </div>
-          
-          <div>
-            <h4 className="font-heading font-bold text-[16px] text-[var(--color-text)] mb-4">Product</h4>
-            <ul className="space-y-3">
-              <li><Link href="/dashboard" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Dashboard</Link></li>
-              <li><Link href="#pricing" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Pricing</Link></li>
-              <li><Link href="/changelog" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Changelog</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-heading font-bold text-[16px] text-[var(--color-text)] mb-4">Legal</h4>
-            <ul className="space-y-3">
-              <li><Link href="/privacy" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Terms of Service</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-heading font-bold text-[16px] text-[var(--color-text)] mb-4">Connect</h4>
-            <div className="flex gap-4">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm" aria-label="Twitter">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-              </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm" aria-label="GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto text-center text-[12px] text-[var(--color-text-faint)]">
-          © {new Date().getFullYear()} StrategyAlert. All rights reserved.
-        </div>
-      </footer>
+      <Footer toggleTheme={toggleTheme} />
     </>
   );
 }
@@ -1161,7 +1041,7 @@ function HeroDemoTerminal({ hasInteracted, isGlobalMuted, setIsGlobalMuted }: { 
         <div data-speed="11.5" className={`absolute top-6 right-6 w-72 bg-[var(--color-bg-card)] border border-[var(--color-border)] border-l-[3px] border-l-[var(--color-accent)] p-4 rounded shadow-xl transition-all duration-500 transform ${notificationOpen ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'}`}>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-[16px]">🔔</span>
-            <span className="text-[12px] font-bold text-[var(--color-text-muted)] uppercase">StrategyAlert</span>
+            <span className="text-[12px] font-bold text-[var(--color-text-muted)] uppercase">SetupAlert</span>
           </div>
           <p className="text-[13px] text-[var(--color-text)] leading-relaxed">
             BTCUSDT hit 72,400 and formed a hammer candle on 15-minute timeframe.
@@ -1213,99 +1093,7 @@ function FaqItem({ question, answer }: { question: string, answer: string }) {
   );
 }
 
-function VoiceDemoForm({ isGlobalMuted, setIsGlobalMuted }: { isGlobalMuted: boolean, setIsGlobalMuted: (val: boolean) => void }) {
-  const [symbol, setSymbol] = useState("BTCUSDT");
-  const [pattern, setPattern] = useState("Hammer");
-  const [timeframe, setTimeframe] = useState("15m");
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [playedMsg, setPlayedMsg] = useState("");
 
-  const playDemo = () => {
-    if (!('speechSynthesis' in window)) {
-      alert("Your browser does not support Speech Synthesis.");
-      return;
-    }
-
-    if (isGlobalMuted) {
-      setIsGlobalMuted(false);
-    }
-    
-    const msg = `${symbol} hit 65,250 and formed a ${pattern} candle on the ${timeframe === '5m' ? '5 minute' : timeframe === '15m' ? '15 minute' : '1 hour'} timeframe.`;
-    
-    window.speechSynthesis.cancel();
-    
-    const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google UK English Female')) || voices[0];
-
-    const utterance = new SpeechSynthesisUtterance(msg);
-    if (femaleVoice) utterance.voice = femaleVoice;
-    utterance.rate = 1.05;
-    utterance.pitch = 1.0;
-    
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-      setPlayedMsg(msg);
-    };
-    utterance.onend = () => setIsSpeaking(false);
-    
-    window.speechSynthesis.speak(utterance);
-  };
-
-  return (
-    <div className="flex flex-col items-center gap-8">
-      <div className="flex flex-wrap justify-center gap-4">
-        <select 
-          value={symbol} onChange={e => setSymbol(e.target.value)}
-          className="bg-[var(--color-bg-deep)] border border-[var(--color-border)] text-[var(--color-text)] px-4 py-3 rounded-md text-[14px] focus-ring outline-none min-w-[140px]"
-        >
-          <option value="BTCUSDT">BTCUSDT</option>
-          <option value="ETHUSDT">ETHUSDT</option>
-          <option value="SOLUSDT">SOLUSDT</option>
-        </select>
-        
-        <select 
-          value={pattern} onChange={e => setPattern(e.target.value)}
-          className="bg-[var(--color-bg-deep)] border border-[var(--color-border)] text-[var(--color-text)] px-4 py-3 rounded-md text-[14px] focus-ring outline-none min-w-[160px]"
-        >
-          <option value="Hammer">Hammer</option>
-          <option value="Doji">Doji</option>
-          <option value="Bullish Engulfing">Bullish Engulfing</option>
-          <option value="Shooting Star">Shooting Star</option>
-        </select>
-
-        <div className="bg-[var(--color-bg-deep)] border border-[var(--color-border)] rounded-md flex p-1">
-          <button onClick={() => setTimeframe("5m")} className={`px-4 py-2 text-[14px] rounded-sm transition-colors focus-ring outline-none ${timeframe === '5m' ? 'bg-[var(--color-bg-card)] text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'}`}>5m</button>
-          <button onClick={() => setTimeframe("15m")} className={`px-4 py-2 text-[14px] rounded-sm transition-colors focus-ring outline-none ${timeframe === '15m' ? 'bg-[var(--color-bg-card)] text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'}`}>15m</button>
-          <button onClick={() => setTimeframe("1h")} className={`px-4 py-2 text-[14px] rounded-sm transition-colors focus-ring outline-none ${timeframe === '1h' ? 'bg-[var(--color-bg-card)] text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'}`}>1h</button>
-        </div>
-      </div>
-
-      <button onClick={playDemo} className="min-h-[52px] inline-flex items-center justify-center gap-2 bg-[var(--color-accent)] text-[var(--color-btn-text)] px-10 rounded-md font-heading font-bold text-[18px] hover:opacity-90 transition-opacity focus-ring outline-none">
-        ▶ Play Alert
-      </button>
-
-      <div className="h-24 flex flex-col items-center justify-center">
-        {isSpeaking ? (
-          <div className="flex items-end gap-1.5 h-8 mb-4">
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar"></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar"></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar"></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar"></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar"></div>
-          </div>
-        ) : (
-          <div className="h-12"></div>
-        )}
-        
-        {playedMsg && (
-          <div className="bg-[var(--color-bg-deep)] border border-[var(--color-border)] px-4 py-2 rounded text-[13px] text-[var(--color-text)] animate-in fade-in zoom-in duration-300">
-            "{playedMsg}"
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function CTACanvasBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -1319,8 +1107,9 @@ function CTACanvasBackground() {
     let offset = 0;
     
     const draw = () => {
-      const w = canvasRef.current!.width;
-      const h = canvasRef.current!.height;
+      if (!canvasRef.current) return;
+      const w = canvasRef.current.width;
+      const h = canvasRef.current.height;
       ctx.clearRect(0, 0, w, h);
       
       ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() || '#EEEEEE';

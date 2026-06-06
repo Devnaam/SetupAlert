@@ -1,4 +1,4 @@
-# StrategyAlert
+# SetupAlert
 
 > Never Miss Your Setup Again.
 
@@ -19,7 +19,7 @@ Real-time trading alert platform that monitors crypto markets and delivers spoke
 ## Project Structure
 
 ```
-strategyalert/
+setupalert/
 ├── frontend/          → Next.js app (deploy to Vercel)
 ├── backend/           → Express API + Worker (deploy to Render)
 └── docs/              → Product specs and documentation
@@ -98,8 +98,8 @@ Deploy as two services from the `backend/` directory:
 ## Monitoring
 
 - Use [UptimeRobot](https://uptimerobot.com) to monitor:
-  - Frontend: `https://strategyalert.in`
-  - Backend API: `https://api.strategyalert.in/api/health`
+  - Frontend: `https://setupalert.in`
+  - Backend API: `https://api.setupalert.in/api/health`
   - Worker health endpoint (if exposed)
 
 ## Key Features

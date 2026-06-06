@@ -45,7 +45,7 @@ export function Navbar() {
  <Bell className="h-4 w-4 text-text" />
  </div>
  <span className="text-xl font-bold bg-brand bg-clip-text text-transparent">
- StrategyAlert
+ SetupAlert
  </span>
  </Link>
 

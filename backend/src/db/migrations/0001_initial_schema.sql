@@ -1,4 +1,4 @@
--- StrategyAlert — Initial Database Schema
+-- SetupAlert — Initial Database Schema
 -- Run this migration in Supabase SQL Editor or via CLI
 
 -- =============================================================================

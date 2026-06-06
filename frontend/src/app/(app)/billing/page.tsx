@@ -141,7 +141,7 @@ export default function BillingPage() {
  const options = {
  key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
  subscription_id: data.subscription_id,
- name: "StrategyAlert",
+ name: "SetupAlert",
  description: `Pro Plan (${billingCycle === "monthly" ? "Monthly" : "Annual"})`,
  handler: async function (response: any) {
  try {

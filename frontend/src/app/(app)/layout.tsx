@@ -144,7 +144,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
  const playCount = event.play_count || 1;
 
  speakAlert(message, playCount);
- showBrowserNotification("StrategyAlert", message);
+ showBrowserNotification("SetupAlert", message);
  }
  )
  .subscribe();
@@ -220,7 +220,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
  </div>
  {!isCollapsed && (
  <span className="text-lg font-bold gradient-text">
- StrategyAlert
+ SetupAlert
  </span>
  )}
  </Link>

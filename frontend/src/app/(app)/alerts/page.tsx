@@ -503,7 +503,7 @@ export default function CreateAlertPage() {
  </div>
  <div className="space-y-3">
  <div className="flex items-center justify-between">
- <label className="text-sm font-medium text-text">What should StrategyAlert say?</label>
+ <label className="text-sm font-medium text-text">What should SetupAlert say?</label>
  <button
  type="button"
  onClick={() => {

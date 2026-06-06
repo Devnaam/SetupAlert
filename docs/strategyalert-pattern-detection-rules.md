@@ -1,8 +1,8 @@
-# StrategyAlert — Candlestick Pattern Detection Rules
+# SetupAlert — Candlestick Pattern Detection Rules
 
 ## Purpose
 
-This document defines exact detection rules for every candlestick pattern supported in StrategyAlert's Simple Mode alert engine. The rules are written so that two engineers implementing the same pattern independently would produce identical results given identical OHLCV input.
+This document defines exact detection rules for every candlestick pattern supported in SetupAlert's Simple Mode alert engine. The rules are written so that two engineers implementing the same pattern independently would produce identical results given identical OHLCV input.
 
 All pattern detection runs only on **closed candles**. Detection must never run on the current live candle.
 
@@ -152,7 +152,7 @@ All conditions must be true:
 ```
 
 ## Trend Requirement
-Hammer is valid at or near a support level or at the end of a decline. StrategyAlert enforces this through the user-defined price level — the user enters a support level, so context is already provided. No algorithmic trend detection required in the engine.
+Hammer is valid at or near a support level or at the end of a decline. SetupAlert enforces this through the user-defined price level — the user enters a support level, so context is already provided. No algorithmic trend detection required in the engine.
 
 ## Mathematical Summary
 ```
@@ -266,7 +266,7 @@ Inverted Hammer and Shooting Star are structurally identical candles. The distin
 - After downtrend / at support → Inverted Hammer (bullish potential)
 - After uptrend / at resistance → Shooting Star (bearish potential)
 
-StrategyAlert exposes them as separate patterns because users select them explicitly by name.
+SetupAlert exposes them as separate patterns because users select them explicitly by name.
 
 ## Edge Cases
 
@@ -492,7 +492,7 @@ DETECT_DOJI(c1) =
 | Gravestone Doji | Long upper wick only, body at bottom |
 | Dragonfly Doji | Long lower wick only, body at top |
 
-At launch, StrategyAlert detects Doji as a single category without subtype distinction.
+At launch, SetupAlert detects Doji as a single category without subtype distinction.
 
 ## Edge Cases
 

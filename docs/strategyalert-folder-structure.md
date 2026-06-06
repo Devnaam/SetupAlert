@@ -1,9 +1,9 @@
-# StrategyAlert — Folder Structure
+# SetupAlert — Folder Structure
 
 ## Root Layout
 
 ```
-strategyalert/
+setupalert/
 ├── frontend/
 ├── backend/
 ├── docs/

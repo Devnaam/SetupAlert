@@ -25,7 +25,7 @@ export function sendNotification(
     body,
     icon: icon || '/icon-192.png',
     badge: '/icon-192.png',
-    tag: 'strategyalert',
+    tag: 'setupalert',
   });
 
   return notification;

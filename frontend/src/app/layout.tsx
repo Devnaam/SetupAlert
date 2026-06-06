@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
- title: "StrategyAlert.in - Never Miss Your Setup Again",
+ title: "SetupAlert.in - Never Miss Your Setup Again",
  description:
  "Create strategy-based trading alerts using price levels, candlestick patterns, and timeframes. Get notified exactly when your setup forms.",
  keywords: [
@@ -28,13 +28,13 @@ export const metadata: Metadata = {
  "BTCUSDT",
  "real-time alerts",
  ],
- authors: [{ name: "StrategyAlert" }],
+ authors: [{ name: "SetupAlert" }],
  openGraph: {
  type: "website",
  locale: "en_US",
- url: "https://strategyalert.in",
- siteName: "StrategyAlert",
- title: "StrategyAlert.in - Never Miss Your Setup Again",
+ url: "https://setupalert.in",
+ siteName: "SetupAlert",
+ title: "SetupAlert.in - Never Miss Your Setup Again",
  description:
  "Create strategy-based trading alerts using price levels, candlestick patterns, and timeframes. Get notified exactly when your setup forms.",
  images: [
@@ -42,19 +42,19 @@ export const metadata: Metadata = {
  url: "/og-image.png",
  width: 1200,
  height: 630,
- alt: "StrategyAlert — Real-time spoken trading alerts",
+ alt: "SetupAlert — Real-time spoken trading alerts",
  },
  ],
  },
  twitter: {
  card: "summary_large_image",
- title: "StrategyAlert.in - Never Miss Your Setup Again",
+ title: "SetupAlert.in - Never Miss Your Setup Again",
  description:
  "Create strategy-based trading alerts using price levels, candlestick patterns, and timeframes.",
  images: ["/og-image.png"],
  },
  metadataBase: new URL(
- process.env.NEXT_PUBLIC_APP_URL || "https://strategyalert.in"
+ process.env.NEXT_PUBLIC_APP_URL || "https://setupalert.in"
  ),
  icons: {
  icon: "/favicon.ico",
