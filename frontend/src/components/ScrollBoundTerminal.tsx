@@ -668,8 +668,11 @@ export default function ScrollBoundTerminal() {
 
         {/* Monitor — foreground focal element */}
         <div
-          className="max-w-3xl lg:max-w-4xl mx-auto px-4 md:px-8 w-full relative z-10"
-          style={{ filter: "drop-shadow(0 40px 80px rgba(0,0,0,0.7))" }}
+          className="mx-auto px-4 md:px-8 w-full relative z-10 flex flex-col items-center"
+          style={{ 
+            filter: "drop-shadow(0 40px 80px rgba(0,0,0,0.7))",
+            maxWidth: "min(100%, 896px, 130vh)" 
+          }}
         >
           {/* Monitor body */}
           <div
@@ -862,7 +865,7 @@ export default function ScrollBoundTerminal() {
           </div>
 
           {/* Stand neck */}
-          <div className="hidden md:flex justify-center">
+          <div className="flex justify-center">
             <div
               style={{
                 width: "100px",
@@ -874,7 +877,7 @@ export default function ScrollBoundTerminal() {
           </div>
 
           {/* Stand base */}
-          <div className="hidden md:flex justify-center">
+          <div className="flex justify-center">
             <div
               style={{
                 width: "260px",

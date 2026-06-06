@@ -5,6 +5,7 @@ import Link from "next/link";
 import Script from "next/script";
 import ScrollBoundTerminal from "../components/ScrollBoundTerminal";
 import BentoFeatures from "../components/BentoFeatures";
+import PatternsSection from "../components/PatternsSection";
 
 const CustomCSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap');
@@ -266,14 +267,15 @@ export default function LandingPage() {
           }
         );
       }
-    });
-
-    // Horizontal Pinned Patterns (Desktop Only)
-    mm.add("(min-width: 1024px)", () => {
+      // Patterns section pinning (works on all sizes down to mobile)
       const patternsWrapper = document.querySelector(".patterns-pinned-wrapper");
       const patternsTrack = document.querySelector(".patterns-track");
       if (patternsWrapper && patternsTrack) {
-        const getScrollAmount = () => -(patternsTrack.scrollWidth - window.innerWidth + 80); // padding
+        const getScrollAmount = () => {
+          // Extra padding for smooth finish
+          const padding = window.innerWidth >= 1024 ? 120 : 60;
+          return -(patternsTrack.scrollWidth - window.innerWidth + padding);
+        };
 
         const tween = gsap.to(patternsTrack, {
           x: getScrollAmount,
@@ -282,11 +284,12 @@ export default function LandingPage() {
 
         ScrollTrigger.create({
           trigger: patternsWrapper,
-          start: "center center",
-          end: () => `+=${Math.abs(getScrollAmount())}`,
+          start: () => window.innerWidth < 768 ? "top 100px" : "center center",
+          // Multiply scroll distance by 1.8 to slow down horizontal scroll, matching industry standard for smooth parallax
+          end: () => `+=${Math.abs(getScrollAmount()) * 1.8}`,
           pin: true,
           animation: tween,
-          scrub: 1,
+          scrub: 1, // 1 second smoothing
           invalidateOnRefresh: true
         });
       }
@@ -585,68 +588,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SECTION 7 — Patterns (Horizontal Pinned on Desktop) */}
-      <section id="patterns" className="bg-[var(--color-bg-deep)] py-24 md:py-32 relative z-20 overflow-hidden">
-        <div className="patterns-pinned-wrapper w-full">
-          <div className="max-w-7xl mx-auto px-6 mb-16 relative z-10">
-            <h2 className="font-heading font-bold text-[36px] md:text-[48px] text-[var(--color-text)] text-center">8 Patterns. Every Setup Covered.</h2>
-          </div>
-          
-          {/* Scroll track (flex-nowrap horizontally) */}
-          <div className="w-full overflow-x-auto lg:overflow-visible no-scrollbar px-6 lg:px-0">
-            <div className="patterns-track flex flex-row gap-6 w-max lg:pl-[max(1.5rem,calc((100vw-80rem)/2))] lg:pr-[max(1.5rem,calc((100vw-80rem)/2))]">
-              <PatternCard 
-                name="Hammer" 
-                desc="Rejection from below at support" 
-                type="Bullish" 
-                svg={<path d="M12 4v4m-3 0h6v6H9V8zm3 6v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>}
-              />
-              <PatternCard 
-                name="Inverted Hammer" 
-                desc="Potential reversal after decline" 
-                type="Bullish" 
-                svg={<path d="M12 20v-4m-3 0h6v-6H9v6zm3-6V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>}
-              />
-              <PatternCard 
-                name="Bullish Engulfing" 
-                desc="Strong buying overwhelms sellers" 
-                type="Bullish" 
-                svg={<><path d="M8 8v4M6 10h4v6H6v-6zm2 6v2M16 4v2m-3 0h6v12h-6V6zm3 12v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>}
-              />
-              <PatternCard 
-                name="Bearish Engulfing" 
-                desc="Strong selling overwhelms buyers" 
-                type="Bearish" 
-                svg={<><path d="M8 18v-2m-2 0h4V6H6v10zm2-10V4m8 14v2m-3 0h6v-6h-6v6zm3-6v-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>}
-              />
-              <PatternCard 
-                name="Doji" 
-                desc="Indecision at key level" 
-                type="Neutral" 
-                svg={<path d="M12 4v16M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>}
-              />
-              <PatternCard 
-                name="Shooting Star" 
-                desc="Rejection from above at resistance" 
-                type="Bearish" 
-                svg={<path d="M12 20v-4m-3 0h6v-6H9v6zm3-6V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>}
-              />
-              <PatternCard 
-                name="Morning Star" 
-                desc="3-candle recovery from downtrend" 
-                type="Bullish" 
-                svg={<><path d="M6 6v10M4 8h4v6H4V8zM12 16v2M10 16h4v2h-4v-2zM18 10v6M16 12h4v8h-4v-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>}
-              />
-              <PatternCard 
-                name="Evening Star" 
-                desc="3-candle reversal from uptrend" 
-                type="Bearish" 
-                svg={<><path d="M6 14V8M4 10h4v8H4v-8zM12 6v2M10 6h4v2h-4V6zM18 12v6M16 10h4v6h-4v-6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* SECTION 7 — Patterns */}
+      <PatternsSection />
 
       {/* SECTION 8 — Pricing */}
       <section id="pricing" className="bg-[var(--color-bg-deep)] py-24 md:py-32 border-t border-[var(--color-border)] relative z-20">
@@ -1239,24 +1182,7 @@ function HeroDemoTerminal({ hasInteracted, isGlobalMuted, setIsGlobalMuted }: { 
   );
 }
 
-function PatternCard({ name, desc, type, svg }: { name: string, desc: string, type: string, svg: React.ReactNode }) {
-  return (
-    <div className="pattern-card flex-shrink-0 w-[280px] bg-[var(--color-bg-card)] border border-[rgba(238,238,238,0.06)] rounded-xl p-6 flex flex-col items-start gap-4">
-      <div data-speed="-8" className="w-16 h-16 rounded border border-[var(--color-border)] bg-[var(--color-bg-deep)] flex items-center justify-center text-[var(--color-text-muted)]">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-          {svg}
-        </svg>
-      </div>
-      <div>
-        <h4 data-speed="-12" className="font-heading font-bold text-[18px] text-[var(--color-text)] mb-1">{name}</h4>
-        <p className="text-[13px] text-[var(--color-text-muted)] leading-snug">{desc}</p>
-      </div>
-      <div data-speed="-18" className={`text-[11px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-wide mt-auto ${type === 'Bullish' ? 'bg-[var(--color-accent-glow)] text-[var(--color-accent)]' : type === 'Bearish' ? 'bg-[var(--color-border)] text-[var(--color-text)]' : 'bg-[var(--color-border)] text-[var(--color-text)]'}`}>
-        {type}
-      </div>
-    </div>
-  );
-}
+
 
 function FaqItem({ question, answer }: { question: string, answer: string }) {
   const [open, setOpen] = useState(false);
