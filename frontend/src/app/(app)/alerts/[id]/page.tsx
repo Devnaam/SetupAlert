@@ -5,393 +5,496 @@ import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import {
-  ArrowLeft,
-  Bell,
-  Volume2,
-  Loader2,
-  AlertCircle,
-  CheckCircle2,
-  TrendingUp,
-  Clock,
-  MessageSquare,
-  Play,
-  Save,
+ ArrowLeft,
+ Loader2,
+ AlertCircle,
+ CheckCircle2,
+ TrendingUp,
+ Clock,
+ MessageSquare,
+ Play,
+ Save,
+ Target,
+ CandlestickChart,
+ Repeat,
 } from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 const SYMBOLS = [
-  "BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT",
-  "ADAUSDT", "DOGEUSDT", "AVAXUSDT", "DOTUSDT", "MATICUSDT",
+ { value: "BTCUSDT", label: "Bitcoin / USDT" },
+ { value: "ETHUSDT", label: "Ethereum / USDT" },
+ { value: "BNBUSDT", label: "BNB / USDT" },
+ { value: "SOLUSDT", label: "Solana / USDT" },
+ { value: "XRPUSDT", label: "XRP / USDT" },
+ { value: "ADAUSDT", label: "Cardano / USDT" },
+ { value: "DOGEUSDT", label: "Dogecoin / USDT" },
+ { value: "AVAXUSDT", label: "Avalanche / USDT" },
+ { value: "LINKUSDT", label: "Chainlink / USDT" },
+ { value: "MATICUSDT", label: "Polygon / USDT" },
 ];
 
-const TIMEFRAMES = ["1m", "3m", "5m", "15m", "30m", "1h", "4h", "1d", "1w"];
+const TIMEFRAMES = {
+  "Minutes": [
+    { value: "1m", label: "1 minute" },
+    { value: "3m", label: "3 minutes" },
+    { value: "5m", label: "5 minutes" },
+    { value: "15m", label: "15 minutes" },
+    { value: "30m", label: "30 minutes" }
+  ],
+  "Hours": [
+    { value: "1h", label: "1 hour" },
+    { value: "2h", label: "2 hours" },
+    { value: "4h", label: "4 hours" },
+    { value: "6h", label: "6 hours" },
+    { value: "8h", label: "8 hours" },
+    { value: "12h", label: "12 hours" }
+  ],
+  "Days": [
+    { value: "1d", label: "1 day" },
+    { value: "3d", label: "3 days" },
+    { value: "1w", label: "1 week" },
+    { value: "1M", label: "1 month" }
+  ]
+};
 
 const PATTERNS = [
-  { value: "hammer", label: "Hammer" },
-  { value: "inverted_hammer", label: "Inverted Hammer" },
-  { value: "engulfing_bullish", label: "Bullish Engulfing" },
-  { value: "engulfing_bearish", label: "Bearish Engulfing" },
-  { value: "doji", label: "Doji" },
-  { value: "morning_star", label: "Morning Star" },
-  { value: "evening_star", label: "Evening Star" },
-  { value: "three_white_soldiers", label: "Three White Soldiers" },
-  { value: "three_black_crows", label: "Three Black Crows" },
-  { value: "shooting_star", label: "Shooting Star" },
+ { value: "hammer", label: "Hammer" },
+ { value: "inverted-hammer", label: "Inverted Hammer" },
+ { value: "bullish-engulfing", label: "Bullish Engulfing" },
+ { value: "bearish-engulfing", label: "Bearish Engulfing" },
+ { value: "doji", label: "Doji" },
+ { value: "shooting-star", label: "Shooting Star" },
+ { value: "morning-star", label: "Morning Star" },
+ { value: "evening-star", label: "Evening Star" },
 ];
 
-const CONDITIONS = [
-  { value: "price_above", label: "Price crosses above" },
-  { value: "price_below", label: "Price crosses below" },
-  { value: "pattern_formed", label: "Candlestick pattern formed" },
-  { value: "volume_spike", label: "Volume spike detected" },
-];
+const PATTERN_DISPLAY_NAMES: Record<string, string> = {
+ hammer: "hammer",
+ "inverted-hammer": "inverted hammer",
+ "bullish-engulfing": "bullish engulfing",
+ "bearish-engulfing": "bearish engulfing",
+ doji: "doji",
+ "shooting-star": "shooting star",
+ "morning-star": "morning star",
+ "evening-star": "evening star",
+};
+
+export type AlertMode = "price" | "pattern" | "repeated_pattern" | "level_pattern";
 
 export default function EditAlertPage() {
-  const router = useRouter();
-  const params = useParams();
-  const alertId = params.id as string;
-  const supabase = createClient();
+ const router = useRouter();
+ const params = useParams();
+ const alertId = params.id as string;
+ const supabase = createClient();
 
-  const [symbol, setSymbol] = useState("BTCUSDT");
-  const [timeframe, setTimeframe] = useState("15m");
-  const [conditionType, setConditionType] = useState("price_above");
-  const [priceLevel, setPriceLevel] = useState("");
-  const [pattern, setPattern] = useState("hammer");
-  const [spokenMessage, setSpokenMessage] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(true);
-  const [success, setSuccess] = useState(false);
+ const [mode, setMode] = useState<AlertMode>("level_pattern");
+ const [symbol, setSymbol] = useState("BTCUSDT");
+ const [priceLevel, setPriceLevel] = useState("");
+ const [pattern, setPattern] = useState("hammer");
+ const [timeframe, setTimeframe] = useState("15m");
+ const [repetitionCount, setRepetitionCount] = useState(2);
+ const [spokenMessage, setSpokenMessage] = useState("");
+ const [useCustomMessage, setUseCustomMessage] = useState(false);
+ const [playCount, setPlayCount] = useState(1);
 
-  useEffect(() => {
-    async function fetchAlert() {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session) {
-          router.push("/login");
-          return;
-        }
+ const [error, setError] = useState<string | null>(null);
+ const [loading, setLoading] = useState(false);
+ const [fetching, setFetching] = useState(true);
+ const [success, setSuccess] = useState(false);
 
-        const res = await fetch(`${API_URL}/api/alerts/${alertId}`, {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
+ const generateSpokenMessage = useCallback(() => {
+ if (!mode) return "";
+ const patternName = PATTERN_DISPLAY_NAMES[pattern] || pattern;
+ const formattedPrice = priceLevel ? Number(priceLevel).toLocaleString() : "[price]";
 
-        if (!res.ok) {
-          setError("Alert not found");
-          setFetching(false);
-          return;
-        }
+ switch (mode) {
+ case "price":
+ return `${symbol} touched ${formattedPrice}.`;
+ case "pattern":
+ return `${symbol} formed a ${patternName} candle on the ${timeframe} timeframe.`;
+ case "repeated_pattern": {
+ const numToWord: Record<number, string> = { 2: "two", 3: "three", 4: "four", 5: "five" };
+ const word = numToWord[repetitionCount] || String(repetitionCount);
+ return `${symbol} formed ${word} consecutive ${patternName} candles on the ${timeframe} timeframe.`;
+ }
+ case "level_pattern":
+ return `${symbol} touched ${formattedPrice} and formed a ${patternName} candle on the ${timeframe} timeframe.`;
+ default:
+ return "";
+ }
+ }, [mode, symbol, priceLevel, pattern, timeframe, repetitionCount]);
 
-        const data = await res.json();
-        const alert = data.alert || data;
+ useEffect(() => {
+ async function fetchAlert() {
+ try {
+ const { data: { session } } = await supabase.auth.getSession();
+ if (!session) {
+ router.push("/login");
+ return;
+ }
 
-        setSymbol(alert.symbol || "BTCUSDT");
-        setTimeframe(alert.timeframe || "15m");
-        setSpokenMessage(alert.spoken_message || "");
+ const res = await fetch(`${API_URL}/api/alerts/${alertId}`, {
+ headers: { Authorization: `Bearer ${session.access_token}` },
+ });
 
-        if (alert.conditions) {
-          setConditionType(alert.conditions.type || "price_above");
-          if (alert.conditions.price) {
-            setPriceLevel(String(alert.conditions.price));
-          }
-          if (alert.conditions.pattern) {
-            setPattern(alert.conditions.pattern);
-          }
-        }
-      } catch (err) {
-        setError("Failed to load alert");
-      } finally {
-        setFetching(false);
-      }
-    }
+ if (!res.ok) {
+ setError("Alert not found");
+ setFetching(false);
+ return;
+ }
 
-    fetchAlert();
-  }, [alertId, supabase, router]);
+ const data = await res.json();
+ const alert = data.data || data;
 
-  function previewSpeak() {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(spokenMessage);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      window.speechSynthesis.speak(utterance);
-    }
-  }
+ setMode(alert.mode || "level_pattern");
+ setSymbol(alert.symbol || "BTCUSDT");
+ setTimeframe(alert.timeframe || "15m");
+ if (alert.price_level) setPriceLevel(String(alert.price_level));
+ if (alert.candle_pattern) setPattern(alert.candle_pattern);
+ if (alert.repetition_count) setRepetitionCount(alert.repetition_count);
+ if (alert.play_count) setPlayCount(alert.play_count);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+ if (alert.custom_message) {
+ setSpokenMessage(alert.custom_message);
+ setUseCustomMessage(true);
+ } else if (alert.generated_message) {
+ setSpokenMessage(alert.generated_message);
+ }
+ } catch {
+ setError("Failed to load alert");
+ } finally {
+ setFetching(false);
+ }
+ }
 
-    try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        router.push("/login");
-        return;
-      }
+ fetchAlert();
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [alertId]);
 
-      const conditions: Record<string, unknown> = {
-        type: conditionType,
-      };
+ useEffect(() => {
+ if (!useCustomMessage && !fetching) {
+ setSpokenMessage(generateSpokenMessage());
+ }
+ }, [generateSpokenMessage, useCustomMessage, fetching]);
 
-      if (conditionType === "price_above" || conditionType === "price_below") {
-        if (!priceLevel || isNaN(Number(priceLevel))) {
-          setError("Please enter a valid price level");
-          setLoading(false);
-          return;
-        }
-        conditions.price = Number(priceLevel);
-      }
+ function previewSpeak() {
+ if ("speechSynthesis" in window) {
+ window.speechSynthesis.cancel();
+ const utterance = new SpeechSynthesisUtterance(spokenMessage);
 
-      if (conditionType === "pattern_formed") {
-        conditions.pattern = pattern;
-      }
+ const voices = window.speechSynthesis.getVoices();
+ const preferredVoices = [
+ "Google US English",
+ "Google UK English Female",
+ "Microsoft Zira",
+ "Samantha",
+ ];
+ 
+ for (const preferred of preferredVoices) {
+ const found = voices.find(v => v.name.includes(preferred));
+ if (found) {
+ utterance.voice = found;
+ break;
+ }
+ }
 
-      const res = await fetch(`${API_URL}/api/alerts/${alertId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          symbol,
-          timeframe,
-          conditions,
-          spoken_message: spokenMessage,
-        }),
-      });
+ utterance.rate = 0.95;
+ utterance.pitch = 1.05;
+ window.speechSynthesis.speak(utterance);
+ }
+ }
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to update alert");
-      }
+ async function handleSubmit(e: React.FormEvent) {
+ e.preventDefault();
+ setError(null);
+ setLoading(true);
 
-      setSuccess(true);
-      setTimeout(() => router.push("/dashboard"), 1500);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
+ try {
+ const { data: { session } } = await supabase.auth.getSession();
+ if (!session) {
+ router.push("/login");
+ return;
+ }
 
-  if (fetching) {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6 animate-pulse">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-white/5" />
-          <div className="h-8 w-48 bg-white/5 rounded-lg" />
-        </div>
-        <div className="h-64 bg-white/5 rounded-2xl" />
-        <div className="h-48 bg-white/5 rounded-2xl" />
-      </div>
-    );
-  }
+ const body: Record<string, unknown> = { symbol };
 
-  if (success) {
-    return (
-      <div className="max-w-lg mx-auto text-center py-20 animate-fade-in">
-        <div className="w-20 h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle2 className="w-10 h-10 text-emerald-400" />
-        </div>
-        <h2 className="text-2xl font-bold mb-2">Alert updated!</h2>
-        <p className="text-white/40 text-sm">Redirecting to dashboard...</p>
-      </div>
-    );
-  }
+ if (mode === "price" || mode === "level_pattern") {
+ if (!priceLevel || isNaN(Number(priceLevel)) || Number(priceLevel) <= 0) {
+ throw new Error("Please enter a valid positive price level.");
+ }
+ body.price_level = Number(priceLevel);
+ }
 
-  return (
-    <div className="max-w-2xl mx-auto animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link
-          href="/dashboard"
-          className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200"
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">Edit Alert</h1>
-          <p className="text-white/40 text-sm mt-0.5">
-            Update your alert conditions and message
-          </p>
-        </div>
-      </div>
+ if (mode === "pattern" || mode === "repeated_pattern" || mode === "level_pattern") {
+ body.candle_pattern = pattern;
+ body.timeframe = timeframe;
+ }
 
-      {error && (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 mb-6 animate-slide-down">
-          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
-          <p className="text-sm text-red-400">{error}</p>
-        </div>
-      )}
+ if (mode === "repeated_pattern") {
+ body.repetition_count = repetitionCount;
+ }
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Symbol & Timeframe */}
-        <div className="glass rounded-2xl p-6 space-y-5">
-          <div className="flex items-center gap-2 mb-1">
-            <TrendingUp className="w-4 h-4 text-indigo-400" />
-            <h2 className="text-sm font-semibold text-white/80">Market Setup</h2>
-          </div>
+ body.play_count = playCount;
+ body.custom_message = useCustomMessage ? spokenMessage : null;
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-white/60">Symbol</label>
-              <select
-                value={symbol}
-                onChange={(e) => setSymbol(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/25 transition-all duration-300 text-sm appearance-none cursor-pointer"
-              >
-                {SYMBOLS.map((s) => (
-                  <option key={s} value={s} className="bg-[#0f0f1a]">{s}</option>
-                ))}
-              </select>
-            </div>
+ const res = await fetch(`${API_URL}/api/alerts/${alertId}`, {
+ method: "PUT",
+ headers: {
+ "Content-Type": "application/json",
+ Authorization: `Bearer ${session.access_token}`,
+ },
+ body: JSON.stringify(body),
+ });
 
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-white/60">Timeframe</label>
-              <div className="flex flex-wrap gap-2">
-                {TIMEFRAMES.map((tf) => (
-                  <button
-                    key={tf}
-                    type="button"
-                    onClick={() => setTimeframe(tf)}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
-                      timeframe === tf
-                        ? "gradient-btn text-white shadow-lg shadow-indigo-500/20"
-                        : "bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10"
-                    }`}
-                  >
-                    {tf}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+ if (!res.ok) {
+ const data = await res.json();
+ if (data.details && Array.isArray(data.details)) {
+ throw new Error(data.details.join(" "));
+ }
+ throw new Error(data.error || "Failed to update alert");
+ }
 
-        {/* Condition */}
-        <div className="glass rounded-2xl p-6 space-y-5">
-          <div className="flex items-center gap-2 mb-1">
-            <Bell className="w-4 h-4 text-cyan-400" />
-            <h2 className="text-sm font-semibold text-white/80">Condition</h2>
-          </div>
+ setSuccess(true);
+ setTimeout(() => router.push("/dashboard"), 1500);
+ } catch (err) {
+ setError(err instanceof Error ? err.message : "Something went wrong");
+ } finally {
+ setLoading(false);
+ }
+ }
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-white/60">Alert when</label>
-            <select
-              value={conditionType}
-              onChange={(e) => setConditionType(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/25 transition-all duration-300 text-sm appearance-none cursor-pointer"
-            >
-              {CONDITIONS.map((c) => (
-                <option key={c.value} value={c.value} className="bg-[#0f0f1a]">{c.label}</option>
-              ))}
-            </select>
-          </div>
+ if (fetching) {
+ return (
+ <div className="max-w-2xl mx-auto space-y-6 animate-pulse">
+ <div className="flex items-center gap-4">
+ <div className="w-10 h-10 rounded-xl bg-surface" />
+ <div className="h-8 w-48 bg-surface rounded-lg" />
+ </div>
+ <div className="h-64 bg-surface rounded-2xl" />
+ </div>
+ );
+ }
 
-          {(conditionType === "price_above" || conditionType === "price_below") && (
-            <div className="space-y-1.5 animate-slide-down">
-              <label className="text-sm font-medium text-white/60">Price level (USDT)</label>
-              <input
-                type="number"
-                step="any"
-                value={priceLevel}
-                onChange={(e) => setPriceLevel(e.target.value)}
-                placeholder="e.g. 71250"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/25 transition-all duration-300 text-sm"
-              />
-            </div>
-          )}
+ if (success) {
+ return (
+ <div className="max-w-lg mx-auto text-center py-20 animate-fade-in">
+ <div className="w-20 h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
+ <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+ </div>
+ <h2 className="text-2xl font-bold mb-2">Alert updated!</h2>
+ <p className="text-text text-sm">Redirecting to dashboard...</p>
+ </div>
+ );
+ }
 
-          {conditionType === "pattern_formed" && (
-            <div className="space-y-1.5 animate-slide-down">
-              <label className="text-sm font-medium text-white/60">Candlestick pattern</label>
-              <div className="grid grid-cols-2 gap-2">
-                {PATTERNS.map((p) => (
-                  <button
-                    key={p.value}
-                    type="button"
-                    onClick={() => setPattern(p.value)}
-                    className={`px-3 py-2.5 rounded-xl text-xs font-medium text-left transition-all duration-200 ${
-                      pattern === p.value
-                        ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
-                        : "bg-white/[0.03] border border-white/5 text-white/50 hover:text-white/80 hover:bg-white/5"
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+ return (
+ <div className="max-w-2xl mx-auto animate-fade-in">
+ <div className="flex items-center gap-4 mb-8">
+ <Link href="/dashboard" className="w-10 h-10 rounded-xl bg-surface border border-surface flex items-center justify-center text-text hover:text-text hover:bg-surface transition-all duration-200">
+ <ArrowLeft className="w-4 h-4" />
+ </Link>
+ <div>
+ <h1 className="text-2xl font-bold">Edit Alert</h1>
+ <p className="text-text text-sm mt-0.5">
+ Update your {mode.replace(/_/g, " ")} alert setup
+ </p>
+ </div>
+ </div>
 
-        {/* Spoken message */}
-        <div className="glass rounded-2xl p-6 space-y-5">
-          <div className="flex items-center gap-2 mb-1">
-            <MessageSquare className="w-4 h-4 text-violet-400" />
-            <h2 className="text-sm font-semibold text-white/80">Spoken Message</h2>
-          </div>
+ {error && (
+ <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/20 mb-6 animate-slide-down">
+ <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+ <p className="text-sm text-red-400">{error}</p>
+ </div>
+ )}
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-white/60">
-              What should StrategyAlert say?
-            </label>
-            <textarea
-              value={spokenMessage}
-              onChange={(e) => setSpokenMessage(e.target.value)}
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/25 transition-all duration-300 text-sm resize-none"
-            />
-          </div>
+ <form onSubmit={handleSubmit} className="space-y-6">
+ <div className="glass rounded-2xl p-6 space-y-5">
+ <div className="flex items-center gap-2 mb-1">
+ <TrendingUp className="w-4 h-4 text-brand" />
+ <h2 className="text-sm font-semibold text-text">Market Symbol</h2>
+ </div>
+ <div className="space-y-1.5">
+ <label className="text-sm font-medium text-text">Symbol</label>
+ <select
+ value={symbol}
+ onChange={(e) => setSymbol(e.target.value)}
+ className="w-full px-4 py-3 rounded-xl bg-surface border border-surface text-text focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all duration-300 text-sm appearance-none cursor-pointer"
+ >
+ {SYMBOLS.map((s) => (
+ <option key={s.value} value={s.value} className="bg-[#0f0f1a]">{s.value} — {s.label}</option>
+ ))}
+ </select>
+ </div>
+ </div>
 
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-cyan-500/5 border border-cyan-500/10">
-            <button
-              type="button"
-              onClick={previewSpeak}
-              className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 hover:bg-cyan-500/20 transition-all duration-200 shrink-0"
-            >
-              <Play className="w-4 h-4 ml-0.5" />
-            </button>
-            <div>
-              <p className="text-xs text-cyan-400 font-medium">Preview spoken alert</p>
-              <p className="text-xs text-white/30 mt-0.5">Click play to hear how your alert will sound</p>
-            </div>
-          </div>
-        </div>
+ {(mode === "pattern" || mode === "repeated_pattern" || mode === "level_pattern") && (
+ <div className="glass rounded-2xl p-6 space-y-5 animate-slide-down">
+ <div className="flex items-center gap-2 mb-1">
+ <CandlestickChart className="w-4 h-4 text-brand" />
+ <h2 className="text-sm font-semibold text-text">Pattern Setup</h2>
+ </div>
+ <div className="space-y-1.5">
+ <label className="text-sm font-medium text-text">Timeframe</label>
+ <div className="relative">
+ <select
+   value={timeframe}
+   onChange={(e) => setTimeframe(e.target.value)}
+   className="w-full px-4 py-3 pl-10 rounded-xl bg-surface border border-surface text-text focus:outline-none focus:border-brand/50 focus:ring-1 focus:ring-brand/25 transition-all duration-300 text-sm appearance-none cursor-pointer"
+ >
+   {Object.entries(TIMEFRAMES).map(([group, options]) => (
+     <optgroup key={group} label={group} className="bg-background text-text/50 font-semibold">
+       {options.map((tf) => (
+         <option key={tf.value} value={tf.value} className="bg-background text-text font-normal">
+           {tf.label} {timeframe === tf.value ? "(Currently selected)" : ""}
+         </option>
+       ))}
+     </optgroup>
+   ))}
+ </select>
+ <Clock className="w-4 h-4 text-brand absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+ <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+   <svg className="w-4 h-4 text-text/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+   </svg>
+ </div>
+ </div>
+ </div>
 
-        {/* Submit */}
-        <div className="flex items-center gap-3">
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex-1 py-3.5 rounded-xl gradient-btn text-white font-semibold text-sm hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Saving changes...
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4" />
-                Save Changes
-              </>
-            )}
-          </button>
-          <Link
-            href="/dashboard"
-            className="px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white/60 font-medium text-sm hover:bg-white/10 transition-all duration-300"
-          >
-            Cancel
-          </Link>
-        </div>
-      </form>
-    </div>
-  );
+ <div className="space-y-1.5">
+ <label className="text-sm font-medium text-text">Candlestick Pattern</label>
+ <div className="grid grid-cols-2 gap-2">
+ {PATTERNS.map((p) => (
+ <button
+ key={p.value}
+ type="button"
+ onClick={() => setPattern(p.value)}
+ className={`px-3 py-2.5 rounded-xl text-xs font-medium text-left transition-all duration-200 ${
+ pattern === p.value
+ ? "bg-brand/10 text-brand border border-brand shadow-sm"
+ : "bg-white/[0.03] border border-surface text-text hover:text-text hover:bg-surface"
+ }`}
+ >
+ {p.label}
+ </button>
+ ))}
+ </div>
+ </div>
+ </div>
+ )}
+
+ {mode === "repeated_pattern" && (
+ <div className="glass rounded-2xl p-6 space-y-5 animate-slide-down">
+ <div className="flex items-center gap-2 mb-1">
+ <Repeat className="w-4 h-4 text-pink-400" />
+ <h2 className="text-sm font-semibold text-text">Repetition Count</h2>
+ </div>
+ <div className="space-y-1.5">
+ <label className="text-sm font-medium text-text">Number of consecutive candles</label>
+ <div className="flex items-center gap-4">
+ <input
+ type="range"
+ min="2"
+ max="5"
+ value={repetitionCount}
+ onChange={(e) => setRepetitionCount(Number(e.target.value))}
+ className="flex-1 h-2 bg-surface rounded-lg appearance-none cursor-pointer accent-pink-500"
+ />
+ <span className="text-xl font-bold w-6 text-center text-pink-400">{repetitionCount}</span>
+ </div>
+ </div>
+ </div>
+ )}
+
+ {(mode === "price" || mode === "level_pattern") && (
+ <div className="glass rounded-2xl p-6 space-y-5 animate-slide-down">
+ <div className="flex items-center gap-2 mb-1">
+ <Target className="w-4 h-4 text-brand" />
+ <h2 className="text-sm font-semibold text-text">Price Level</h2>
+ </div>
+ <div className="space-y-1.5">
+ <label className="text-sm font-medium text-text">Alert when price touches this level (USDT)</label>
+ <input
+ type="number"
+ step="any"
+ value={priceLevel}
+ onChange={(e) => setPriceLevel(e.target.value)}
+ placeholder="e.g. 71250"
+ required
+ className="w-full px-4 py-3 rounded-xl bg-surface border border-surface text-text placeholder:text-text focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all duration-300 text-sm"
+ />
+ </div>
+ </div>
+ )}
+
+ <div className="glass rounded-2xl p-6 space-y-5">
+ <div className="flex items-center gap-2 mb-1">
+ <MessageSquare className="w-4 h-4 text-brand" />
+ <h2 className="text-sm font-semibold text-text">Spoken Message</h2>
+ </div>
+ <div className="space-y-3">
+ <div className="flex items-center justify-between">
+ <label className="text-sm font-medium text-text">What should StrategyAlert say?</label>
+ <button
+ type="button"
+ onClick={() => {
+ setUseCustomMessage(!useCustomMessage);
+ if (useCustomMessage) setSpokenMessage(generateSpokenMessage());
+ }}
+ className="text-xs text-brand hover:text-brand transition-colors"
+ >
+ {useCustomMessage ? "Use default" : "Customize"}
+ </button>
+ </div>
+ <textarea
+ value={spokenMessage}
+ onChange={(e) => setSpokenMessage(e.target.value)}
+ rows={3}
+ readOnly={!useCustomMessage}
+ className={`w-full px-4 py-3 rounded-xl bg-surface border border-surface text-text placeholder:text-text focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all duration-300 text-sm resize-none ${!useCustomMessage ? "opacity-70 cursor-default" : ""}`}
+ />
+ </div>
+ <div className="flex items-center gap-3 p-3 rounded-xl bg-brand/10 border border-brand">
+ <button
+ type="button"
+ onClick={previewSpeak}
+ className="w-10 h-10 rounded-xl bg-brand/10 border border-brand flex items-center justify-center text-brand hover:bg-brand/10 transition-all duration-200 shrink-0"
+ >
+ <Play className="w-4 h-4 ml-0.5" />
+ </button>
+ <div>
+ <p className="text-xs text-brand font-medium">Preview spoken alert</p>
+ <p className="text-xs text-text mt-0.5">Click play to hear how your alert will sound</p>
+ </div>
+ </div>
+
+ <div className="space-y-1.5 pt-2">
+ <label className="text-sm font-medium text-text">Play Count</label>
+ <div className="flex items-center gap-4">
+ <input
+ type="range"
+ min="1"
+ max="10"
+ value={playCount}
+ onChange={(e) => setPlayCount(Number(e.target.value))}
+ className="flex-1 h-2 bg-surface rounded-lg appearance-none cursor-pointer accent-brand"
+ />
+ <span className="text-xl font-bold w-6 text-center text-brand">{playCount}</span>
+ </div>
+ <p className="text-[10px] text-text mt-1">How many times should the alert voice repeat?</p>
+ </div>
+ </div>
+
+ <div className="flex items-center gap-3 pt-2">
+ <button type="submit" disabled={loading} className="flex-1 py-3.5 rounded-xl gradient-btn text-text font-semibold text-sm hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+ {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving changes...</> : <><Save className="w-4 h-4" /> Save Changes</>}
+ </button>
+ <Link href="/dashboard" className="px-6 py-3.5 rounded-xl bg-surface border border-surface text-text font-medium text-sm hover:bg-surface transition-all duration-300">
+ Cancel
+ </Link>
+ </div>
+ </form>
+ </div>
+ );
 }

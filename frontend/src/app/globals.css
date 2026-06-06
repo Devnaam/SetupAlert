@@ -127,12 +127,12 @@
 
 /* ── Base Styles ──────────────────────────────── */
 html {
-  background-color: #0a0a0f;
+  background-color: #222831;
   color-scheme: dark;
 }
 body {
-  background-color: #0a0a0f;
-  color: #ffffff;
+  background-color: #222831;
+  color: #EEEEEE;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -140,51 +140,41 @@ body {
 
 /* ── OLD Utility Classes ──────────────────────────── */
 @utility glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #393E46;
+  border: 1px solid rgba(238, 238, 238, 0.05);
 }
 
 @utility glass-hover {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #4a5059;
+  border: 1px solid rgba(238, 238, 238, 0.1);
 }
 
 @utility gradient-text {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #00ADB5;
 }
 
 @utility gradient-text-cyan {
-  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #00ADB5;
 }
 
 @utility gradient-border {
   position: relative;
-  border: 1px solid transparent;
+  border: 1px solid #00ADB5;
   background-clip: padding-box;
 }
 
 @utility gradient-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background-color: #00ADB5;
   transition: all 0.3s ease;
 }
 
 @utility gradient-btn-hover {
-  background: linear-gradient(135deg, #5558e6, #7c4fed);
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+  background-color: #009aa1;
+  box-shadow: 0 0 30px rgba(0, 173, 181, 0.4);
 }
 
 @utility focus-ring {
-  outline: 2px solid rgba(99, 102, 241, 0.5);
+  outline: 2px solid rgba(0, 173, 181, 0.5);
   outline-offset: 2px;
 }
 
@@ -224,14 +214,14 @@ body {
 
 /* ── Selection & Input ────────────────────────────────── */
 ::selection {
-  background: rgba(99, 102, 241, 0.4);
-  color: #ffffff;
+  background: rgba(0, 173, 181, 0.4);
+  color: #EEEEEE;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #0f0f1a inset;
-  -webkit-text-fill-color: #ffffff;
-  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #393E46 inset;
+  -webkit-text-fill-color: #EEEEEE;
+  caret-color: #EEEEEE;
   transition: background-color 5000s ease-in-out 0s;
 }

@@ -1,31 +1,40 @@
 import { Candle, PatternResult } from '../types/candle';
-import { MINIMUM_BODY_THRESHOLD, SMALL_BODY_THRESHOLD, SIGNIFICANT_WICK, MAX_OPPOSITE_WICK } from './constants';
-import { bodyRatio, lowerRatio, upperRatio, fullRange, isCandleValid } from './utils';
+import { isCandleValid } from './utils';
 
 export function detectHammer(candle: Candle): PatternResult {
   if (!isCandleValid(candle)) {
     return { detected: false };
   }
 
-  const range = fullRange(candle);
-  if (range <= 0) {
+  const bodySize = Math.abs(candle.close - candle.open);
+  const fullRange = candle.high - candle.low;
+
+  if (fullRange <= 0) {
     return { detected: false };
   }
 
-  const bRatio = bodyRatio(candle);
-  const lRatio = lowerRatio(candle);
-  const uRatio = upperRatio(candle);
+  const upperWick = candle.high - Math.max(candle.open, candle.close);
+  const lowerWick = Math.min(candle.open, candle.close) - candle.low;
+
+  const bodyRatio = bodySize / fullRange;
 
   const detected =
-    bRatio >= MINIMUM_BODY_THRESHOLD &&
-    bRatio <= SMALL_BODY_THRESHOLD &&
-    lRatio >= SIGNIFICANT_WICK &&
-    uRatio <= MAX_OPPOSITE_WICK;
+    bodyRatio <= 0.35 && // small body
+    lowerWick >= bodySize && // lower wick at least body size
+    upperWick <= lowerWick; // upper wick smaller than lower wick
 
-  if (detected) {
-    const confidence = Math.min(1, (lRatio - SIGNIFICANT_WICK) / (1 - SIGNIFICANT_WICK) * 0.5 + 0.5);
-    return { detected: true, confidence };
+  if (!detected) {
+    return { detected: false };
   }
 
-  return { detected: false };
+  // Confidence based on lower wick dominance
+  const confidence = Math.min(
+    1,
+    (lowerWick / (bodySize || 0.0001)) / 4
+  );
+
+  return {
+    detected: true,
+    confidence,
+  };
 }

@@ -1,6 +1,6 @@
 import { Candle, PatternResult } from '../types/candle';
-import { LARGE_BODY_THRESHOLD, STAR_BODY_THRESHOLD } from './constants';
-import { bodyRatio, fullRange, isBearish, isBullish, isCandleValid, midBody } from './utils';
+import { LARGE_BODY_THRESHOLD, STAR_BODY_THRESHOLD, ENGULF_TOLERANCE_FACTOR } from './constants';
+import { bodyRatio, bodyTop, bodySize, fullRange, isBearish, isBullish, isCandleValid, midBody } from './utils';
 
 export function detectMorningStar(cMinus1: Candle, c0: Candle, c1: Candle): PatternResult {
   if (!isCandleValid(cMinus1) || !isCandleValid(c0) || !isCandleValid(c1)) {
@@ -26,6 +26,11 @@ export function detectMorningStar(cMinus1: Candle, c0: Candle, c1: Candle): Patt
 
   const c0BodyRatio = bodyRatio(c0);
   if (c0BodyRatio > STAR_BODY_THRESHOLD) {
+    return { detected: false };
+  }
+
+  const gapTolerance = bodySize(cMinus1) * ENGULF_TOLERANCE_FACTOR;
+  if (bodyTop(c0) > cMinus1.close + gapTolerance) {
     return { detected: false };
   }
 

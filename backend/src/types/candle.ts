@@ -5,6 +5,7 @@ export interface Candle {
   close: number;
   timestamp: number;
   closeTime: number;
+  isClosed?: boolean;
 }
 
 export interface PatternResult {

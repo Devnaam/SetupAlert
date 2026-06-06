@@ -12,7 +12,7 @@ interface StreamEntry {
   isClosing: boolean;
 }
 
-type CandleCloseCallback = (symbol: string, timeframe: string, candle: Candle) => void;
+type CandleUpdateCallback = (symbol: string, timeframe: string, candle: Candle) => void;
 
 const MAX_RECONNECT_ATTEMPTS = 10;
 const BASE_RECONNECT_DELAY_MS = 1000;
@@ -20,19 +20,19 @@ const MAX_RECONNECT_DELAY_MS = 30000;
 
 export class StreamManager {
   private streams: Map<string, StreamEntry>;
-  private onCandleCloseCallback: CandleCloseCallback | null;
+  private onCandleUpdateCallback: CandleUpdateCallback | null;
 
   constructor() {
     this.streams = new Map();
-    this.onCandleCloseCallback = null;
+    this.onCandleUpdateCallback = null;
   }
 
   private static buildStreamKey(symbol: string, timeframe: string): string {
     return `${symbol}_${timeframe}`;
   }
 
-  public onCandleClose(callback: CandleCloseCallback): void {
-    this.onCandleCloseCallback = callback;
+  public onCandleUpdate(callback: CandleUpdateCallback): void {
+    this.onCandleUpdateCallback = callback;
   }
 
   public subscribe(symbol: string, timeframe: string): void {
@@ -117,13 +117,14 @@ export class StreamManager {
       try {
         const message: BinanceKlineMessage = JSON.parse(data.toString());
 
-        if (isKlineClosed(message)) {
-          const candle = parseKlineMessage(message);
+        const candle = parseKlineMessage(message);
+        
+        if (candle.isClosed) {
           logger.debug(`Candle closed: ${key} at ${candle.closeTime}`);
+        }
 
-          if (this.onCandleCloseCallback) {
-            this.onCandleCloseCallback(symbol, timeframe, candle);
-          }
+        if (this.onCandleUpdateCallback) {
+          this.onCandleUpdateCallback(symbol, timeframe, candle);
         }
       } catch (err) {
         logger.error(`Error parsing message for ${key}:`, err);

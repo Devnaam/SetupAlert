@@ -15,36 +15,62 @@ function validateAlertInput(body: Record<string, unknown>): {
 } {
   const errors: string[] = [];
 
+  const validModes = ['price', 'pattern', 'repeated_pattern', 'level_pattern'];
+  if (!body.mode || typeof body.mode !== "string" || !validModes.includes(body.mode)) {
+    errors.push(`mode must be one of: ${validModes.join(", ")}`);
+    return { valid: false, errors };
+  }
+
   if (!body.symbol || typeof body.symbol !== "string") {
     errors.push("symbol is required and must be a string.");
   } else if (!SUPPORTED_SYMBOLS.includes(body.symbol as string)) {
-    errors.push(
-      `symbol must be one of: ${SUPPORTED_SYMBOLS.join(", ")}`
-    );
+    errors.push(`symbol must be one of: ${SUPPORTED_SYMBOLS.join(", ")}`);
   }
 
-  if (!body.candle_pattern || typeof body.candle_pattern !== "string") {
-    errors.push("candle_pattern is required and must be a string.");
-  } else if (!SUPPORTED_PATTERNS.includes(body.candle_pattern as any)) {
-    errors.push(
-      `candle_pattern must be one of: ${SUPPORTED_PATTERNS.join(", ")}`
-    );
+  if (body.mode === 'price' || body.mode === 'level_pattern') {
+    if (body.price_level === undefined || body.price_level === null) {
+      errors.push("price_level is required for this mode.");
+    } else {
+      const priceLevel = Number(body.price_level);
+      if (isNaN(priceLevel) || priceLevel <= 0) {
+        errors.push("price_level must be a positive number.");
+      }
+    }
   }
 
-  if (!body.timeframe || typeof body.timeframe !== "string") {
-    errors.push("timeframe is required and must be a string.");
-  } else if (!SUPPORTED_TIMEFRAMES.includes(body.timeframe as string)) {
-    errors.push(
-      `timeframe must be one of: ${SUPPORTED_TIMEFRAMES.join(", ")}`
-    );
+  if (body.mode === 'pattern' || body.mode === 'repeated_pattern' || body.mode === 'level_pattern') {
+    if (!body.candle_pattern || typeof body.candle_pattern !== "string") {
+      errors.push("candle_pattern is required for this mode and must be a string.");
+    } else if (!SUPPORTED_PATTERNS.includes(body.candle_pattern as any)) {
+      errors.push(`candle_pattern must be one of: ${SUPPORTED_PATTERNS.join(", ")}`);
+    }
+
+    if (!body.timeframe || typeof body.timeframe !== "string") {
+      errors.push("timeframe is required for this mode and must be a string.");
+    } else if (!SUPPORTED_TIMEFRAMES.includes(body.timeframe as string)) {
+      errors.push(`timeframe must be one of: ${SUPPORTED_TIMEFRAMES.join(", ")}`);
+    }
   }
 
-  if (body.price_level === undefined || body.price_level === null) {
-    errors.push("price_level is required.");
-  } else {
-    const priceLevel = Number(body.price_level);
-    if (isNaN(priceLevel) || priceLevel <= 0) {
-      errors.push("price_level must be a positive number.");
+  if (body.mode === 'repeated_pattern') {
+    if (body.repetition_count !== undefined && body.repetition_count !== null) {
+      const count = Number(body.repetition_count);
+      if (isNaN(count) || count < 2 || !Number.isInteger(count)) {
+        errors.push("repetition_count must be an integer >= 2.");
+      }
+    }
+  }
+
+  if (body.play_count !== undefined && body.play_count !== null) {
+    const playCount = Number(body.play_count);
+    if (isNaN(playCount) || playCount < 1 || playCount > 10 || !Number.isInteger(playCount)) {
+      errors.push("play_count must be an integer between 1 and 10.");
+    }
+  }
+
+  if (body.custom_message !== undefined && body.custom_message !== null) {
+    if (typeof body.custom_message !== "string") {
+      errors.push("custom_message must be a string.");
     }
   }
 
@@ -57,40 +83,61 @@ function validateUpdateInput(body: Record<string, unknown>): {
 } {
   const errors: string[] = [];
 
+  const validModes = ['price', 'pattern', 'repeated_pattern', 'level_pattern'];
+  if (body.mode !== undefined) {
+    if (typeof body.mode !== "string" || !validModes.includes(body.mode)) {
+      errors.push(`mode must be one of: ${validModes.join(", ")}`);
+    }
+  }
+
   if (body.symbol !== undefined) {
     if (typeof body.symbol !== "string") {
       errors.push("symbol must be a string.");
     } else if (!SUPPORTED_SYMBOLS.includes(body.symbol as string)) {
-      errors.push(
-        `symbol must be one of: ${SUPPORTED_SYMBOLS.join(", ")}`
-      );
+      errors.push(`symbol must be one of: ${SUPPORTED_SYMBOLS.join(", ")}`);
     }
   }
 
-  if (body.candle_pattern !== undefined) {
+  if (body.candle_pattern !== undefined && body.candle_pattern !== null) {
     if (typeof body.candle_pattern !== "string") {
-      errors.push("candle_pattern must be a string.");
+      errors.push("candle_pattern must be a string or null.");
     } else if (!SUPPORTED_PATTERNS.includes(body.candle_pattern as any)) {
-      errors.push(
-        `candle_pattern must be one of: ${SUPPORTED_PATTERNS.join(", ")}`
-      );
+      errors.push(`candle_pattern must be one of: ${SUPPORTED_PATTERNS.join(", ")}`);
     }
   }
 
-  if (body.timeframe !== undefined) {
+  if (body.timeframe !== undefined && body.timeframe !== null) {
     if (typeof body.timeframe !== "string") {
-      errors.push("timeframe must be a string.");
+      errors.push("timeframe must be a string or null.");
     } else if (!SUPPORTED_TIMEFRAMES.includes(body.timeframe as string)) {
-      errors.push(
-        `timeframe must be one of: ${SUPPORTED_TIMEFRAMES.join(", ")}`
-      );
+      errors.push(`timeframe must be one of: ${SUPPORTED_TIMEFRAMES.join(", ")}`);
     }
   }
 
-  if (body.price_level !== undefined) {
+  if (body.price_level !== undefined && body.price_level !== null) {
     const priceLevel = Number(body.price_level);
     if (isNaN(priceLevel) || priceLevel <= 0) {
       errors.push("price_level must be a positive number.");
+    }
+  }
+
+  if (body.repetition_count !== undefined && body.repetition_count !== null) {
+    const count = Number(body.repetition_count);
+    if (isNaN(count) || count < 2 || !Number.isInteger(count)) {
+      errors.push("repetition_count must be an integer >= 2.");
+    }
+  }
+
+  if (body.play_count !== undefined && body.play_count !== null) {
+    const playCount = Number(body.play_count);
+    if (isNaN(playCount) || playCount < 1 || playCount > 10 || !Number.isInteger(playCount)) {
+      errors.push("play_count must be an integer between 1 and 10.");
+    }
+  }
+
+  if (body.custom_message !== undefined && body.custom_message !== null) {
+    if (typeof body.custom_message !== "string") {
+      errors.push("custom_message must be a string.");
     }
   }
 
@@ -149,10 +196,13 @@ router.post(
 
       const alert = await AlertService.createAlert(authReq.user.id, {
         symbol: req.body.symbol,
-        price_level: Number(req.body.price_level),
-        candle_pattern: req.body.candle_pattern,
-        timeframe: req.body.timeframe,
-        mode: req.body.mode || "simple",
+        price_level: req.body.price_level != null ? Number(req.body.price_level) : null,
+        candle_pattern: req.body.candle_pattern || null,
+        timeframe: req.body.timeframe || null,
+        mode: req.body.mode,
+        repetition_count: req.body.repetition_count ? Number(req.body.repetition_count) : null,
+        play_count: req.body.play_count ? Number(req.body.play_count) : 1,
+        custom_message: req.body.custom_message || null,
       } as any);
 
       res.status(201).json({ success: true, data: alert });
@@ -180,10 +230,13 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response): Promise<
     const alertId = String(req.params.id);
     const updateInput: Record<string, unknown> = {};
     if (req.body.symbol !== undefined) updateInput.symbol = req.body.symbol;
-    if (req.body.price_level !== undefined) updateInput.price_level = Number(req.body.price_level);
+    if (req.body.price_level !== undefined) updateInput.price_level = req.body.price_level != null ? Number(req.body.price_level) : null;
     if (req.body.candle_pattern !== undefined) updateInput.candle_pattern = req.body.candle_pattern;
     if (req.body.timeframe !== undefined) updateInput.timeframe = req.body.timeframe;
     if (req.body.mode !== undefined) updateInput.mode = req.body.mode;
+    if (req.body.repetition_count !== undefined) updateInput.repetition_count = req.body.repetition_count;
+    if (req.body.play_count !== undefined) updateInput.play_count = req.body.play_count;
+    if (req.body.custom_message !== undefined) updateInput.custom_message = req.body.custom_message;
     if (req.body.is_active !== undefined) updateInput.is_active = req.body.is_active;
 
     const alert = await AlertService.updateAlert(

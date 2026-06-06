@@ -1,6 +1,5 @@
 import { Candle, PatternResult } from '../types/candle';
-import { MINIMUM_BODY_THRESHOLD, SMALL_BODY_THRESHOLD, SIGNIFICANT_WICK, MAX_OPPOSITE_WICK } from './constants';
-import { bodyRatio, lowerRatio, upperRatio, fullRange, isCandleValid } from './utils';
+import { bodyRatio, fullRange, isCandleValid } from './utils';
 
 export function detectShootingStar(candle: Candle): PatternResult {
   if (!isCandleValid(candle)) {
@@ -8,23 +7,34 @@ export function detectShootingStar(candle: Candle): PatternResult {
   }
 
   const range = fullRange(candle);
+
   if (range <= 0) {
     return { detected: false };
   }
 
+  const bodySize = Math.abs(candle.close - candle.open);
+
+  const upperWick = candle.high - Math.max(candle.open, candle.close);
+
+  const lowerWick = Math.min(candle.open, candle.close) - candle.low;
+
   const bRatio = bodyRatio(candle);
-  const lRatio = lowerRatio(candle);
-  const uRatio = upperRatio(candle);
 
   const detected =
-    bRatio >= MINIMUM_BODY_THRESHOLD &&
-    bRatio <= SMALL_BODY_THRESHOLD &&
-    uRatio >= SIGNIFICANT_WICK &&
-    lRatio <= MAX_OPPOSITE_WICK;
+    bRatio <= 0.35 && // small body
+    upperWick >= bodySize && // upper wick at least body size
+    lowerWick <= upperWick; // lower wick smaller than upper wick
 
   if (detected) {
-    const confidence = Math.min(1, (uRatio - SIGNIFICANT_WICK) / (1 - SIGNIFICANT_WICK) * 0.5 + 0.5);
-    return { detected: true, confidence };
+    const confidence = Math.min(
+      1,
+      (upperWick / (bodySize || 0.0001)) / 4
+    );
+
+    return {
+      detected: true,
+      confidence,
+    };
   }
 
   return { detected: false };

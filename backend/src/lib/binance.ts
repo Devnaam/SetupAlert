@@ -41,6 +41,7 @@ export function parseKlineMessage(msg: BinanceKlineMessage): Candle {
     close: parseFloat(k.c),
     timestamp: k.t,
     closeTime: k.T,
+    isClosed: k.x,
   };
 }
 

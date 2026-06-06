@@ -14,13 +14,30 @@ const PATTERN_DISPLAY_NAMES: Record<string, string> = {
 };
 
 function generateAlertMessage(
+  mode: string,
   symbol: string,
-  priceLevel: number,
-  pattern: string,
-  timeframe: string
+  priceLevel: number | null,
+  pattern: string | null,
+  timeframe: string | null,
+  repetitionCount: number | null
 ): string {
-  const patternName = PATTERN_DISPLAY_NAMES[pattern] || pattern;
-  return `${symbol} hit ${priceLevel} and formed a ${patternName} candle on ${timeframe} timeframe.`;
+  const patternName = pattern ? (PATTERN_DISPLAY_NAMES[pattern] || pattern) : "";
+  const formattedPrice = priceLevel ? priceLevel.toLocaleString() : "";
+
+  switch (mode) {
+    case "price":
+      return `${symbol} touched ${formattedPrice}.`;
+    case "pattern":
+      return `${symbol} formed a ${patternName} candle on the ${timeframe} timeframe.`;
+    case "repeated_pattern": {
+      const numToWord: Record<number, string> = { 2: "two", 3: "three", 4: "four", 5: "five" };
+      const word = numToWord[repetitionCount || 2] || String(repetitionCount || 2);
+      return `${symbol} formed ${word} consecutive ${patternName} candles on the ${timeframe} timeframe.`;
+    }
+    case "level_pattern":
+    default:
+      return `${symbol} touched ${formattedPrice} and formed a ${patternName} candle on the ${timeframe} timeframe.`;
+  }
 }
 
 export const AlertService = {
@@ -60,24 +77,31 @@ export const AlertService = {
 
   async createAlert(userId: string, input: AlertCreateInput): Promise<Alert> {
     const message = generateAlertMessage(
+      input.mode,
       input.symbol,
-      input.price_level as number,
-      input.candle_pattern as string,
-      input.timeframe as string
+      input.price_level || null,
+      input.candle_pattern || null,
+      input.timeframe || null,
+      input.repetition_count || null
     );
+
+    const insertPayload: Record<string, unknown> = {
+      user_id: userId,
+      symbol: input.symbol,
+      mode: input.mode,
+      generated_message: message,
+      play_count: input.play_count ?? 1,
+      custom_message: input.custom_message ?? null,
+      is_active: true,
+    };
+    if (input.price_level != null) insertPayload.price_level = input.price_level;
+    if (input.candle_pattern != null) insertPayload.candle_pattern = input.candle_pattern;
+    if (input.timeframe != null) insertPayload.timeframe = input.timeframe;
+    if (input.repetition_count != null) insertPayload.repetition_count = input.repetition_count;
 
     const { data, error } = await supabase
       .from("alerts")
-      .insert({
-        user_id: userId,
-        symbol: input.symbol,
-        price_level: input.price_level,
-        candle_pattern: input.candle_pattern,
-        timeframe: input.timeframe,
-        mode: input.mode || "simple",
-        generated_message: message,
-        is_active: true,
-      })
+      .insert(insertPayload)
       .select()
       .single();
 
@@ -101,23 +125,51 @@ export const AlertService = {
     }
 
     const updatedSymbol = input.symbol ?? existing.symbol;
-    const updatedPriceLevel = input.price_level ?? existing.price_level;
-    const updatedPattern = input.candle_pattern ?? existing.candle_pattern;
-    const updatedTimeframe = input.timeframe ?? existing.timeframe;
+    const updatedMode = input.mode ?? existing.mode;
+
+    let updatedPriceLevel = input.price_level !== undefined ? input.price_level : existing.price_level;
+    let updatedPattern = input.candle_pattern !== undefined ? input.candle_pattern : existing.candle_pattern;
+    let updatedTimeframe = input.timeframe !== undefined ? input.timeframe : existing.timeframe;
+    let updatedRepetitionCount = input.repetition_count !== undefined ? input.repetition_count : existing.repetition_count;
+
+    // Clean up fields based on the mode
+    if (updatedMode === 'price') {
+      updatedPattern = null;
+      updatedTimeframe = null;
+      updatedRepetitionCount = null;
+    } else if (updatedMode === 'pattern') {
+      updatedPriceLevel = null;
+      updatedRepetitionCount = null;
+    } else if (updatedMode === 'repeated_pattern') {
+      updatedPriceLevel = null;
+    } else if (updatedMode === 'level_pattern') {
+      updatedRepetitionCount = null;
+    }
+
+    const updatedPlayCount = input.play_count !== undefined ? input.play_count : existing.play_count;
+    const updatedCustomMessage = input.custom_message !== undefined ? input.custom_message : existing.custom_message;
 
     const message = generateAlertMessage(
+      updatedMode,
       updatedSymbol,
-      updatedPriceLevel as number,
-      updatedPattern as string,
-      updatedTimeframe as string
+      updatedPriceLevel,
+      updatedPattern,
+      updatedTimeframe,
+      updatedRepetitionCount
     );
 
-    const updatePayload: Record<string, unknown> = { generated_message: message };
+    const updatePayload: Record<string, unknown> = {
+      generated_message: message,
+      price_level: updatedPriceLevel,
+      candle_pattern: updatedPattern,
+      timeframe: updatedTimeframe,
+      repetition_count: updatedRepetitionCount,
+    };
+
     if (input.symbol !== undefined) updatePayload.symbol = input.symbol;
-    if (input.price_level !== undefined) updatePayload.price_level = input.price_level;
-    if (input.candle_pattern !== undefined) updatePayload.candle_pattern = input.candle_pattern;
-    if (input.timeframe !== undefined) updatePayload.timeframe = input.timeframe;
     if (input.mode !== undefined) updatePayload.mode = input.mode;
+    if (input.play_count !== undefined) updatePayload.play_count = input.play_count;
+    if (input.custom_message !== undefined) updatePayload.custom_message = input.custom_message;
     if (input.is_active !== undefined) updatePayload.is_active = input.is_active;
 
     const { data, error } = await supabase
@@ -144,24 +196,31 @@ export const AlertService = {
     }
 
     const message = generateAlertMessage(
+      original.mode,
       original.symbol,
-      original.price_level as number,
-      original.candle_pattern as string,
-      original.timeframe as string
+      original.price_level,
+      original.candle_pattern,
+      original.timeframe,
+      original.repetition_count
     );
+
+    const dupPayload: Record<string, unknown> = {
+      user_id: userId,
+      symbol: original.symbol,
+      mode: original.mode,
+      generated_message: message,
+      play_count: original.play_count,
+      custom_message: original.custom_message,
+      is_active: true,
+    };
+    if (original.price_level != null) dupPayload.price_level = original.price_level;
+    if (original.candle_pattern != null) dupPayload.candle_pattern = original.candle_pattern;
+    if (original.timeframe != null) dupPayload.timeframe = original.timeframe;
+    if (original.repetition_count != null) dupPayload.repetition_count = original.repetition_count;
 
     const { data, error } = await supabase
       .from("alerts")
-      .insert({
-        user_id: userId,
-        symbol: original.symbol,
-        price_level: original.price_level,
-        candle_pattern: original.candle_pattern,
-        timeframe: original.timeframe,
-        mode: original.mode,
-        generated_message: message,
-        is_active: true,
-      })
+      .insert(dupPayload)
       .select()
       .single();
 
