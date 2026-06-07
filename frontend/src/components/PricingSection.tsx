@@ -11,6 +11,7 @@ export default function PricingSection() {
   const [pricingMode, setPricingMode] = useState<"monthly" | "annual">("monthly");
   const [upgradeLoading, setUpgradeLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stickyStyle, setStickyStyle] = useState<React.CSSProperties>({});
   const router = useRouter();
   const supabase = createClient();
 
@@ -19,8 +20,30 @@ export default function PricingSection() {
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     document.body.appendChild(script);
+
+    const handleResize = () => {
+      const el = document.getElementById("pricing");
+      if (el) {
+        const height = el.offsetHeight;
+        if (window.innerHeight >= height) {
+          // If screen is taller than or equal to the section height, stick to top
+          setStickyStyle({ position: "sticky", top: "0px" });
+        } else {
+          // If section is taller than screen (e.g. mobile), stick to top with a negative offset 
+          // so it only pins when the bottom of the section hits the bottom of the screen!
+          setStickyStyle({ position: "sticky", top: `${window.innerHeight - height}px` });
+        }
+      }
+    };
+
+    handleResize();
+    const timeout = setTimeout(handleResize, 200);
+    window.addEventListener("resize", handleResize);
+
     return () => {
       document.body.removeChild(script);
+      clearTimeout(timeout);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -85,7 +108,7 @@ export default function PricingSection() {
   };
 
   return (
-    <section id="pricing" className="sticky top-0 bg-[var(--color-bg-deep)] pt-28 pb-12 lg:pb-16 border-t border-[var(--color-border)] z-20 overflow-hidden">
+    <section id="pricing" style={stickyStyle} className="relative min-h-screen flex flex-col justify-center bg-[var(--color-bg-deep)] py-16 md:py-20 border-t border-[var(--color-border)] z-20 overflow-hidden">
       {/* Soft background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--color-accent)]/5 blur-[120px] rounded-full"></div>

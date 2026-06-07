@@ -28,7 +28,8 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
   };
 
   return (
-    <footer className="bg-[var(--color-bg-deep)] border-t border-[var(--color-border)] pt-20 pb-10 px-6 relative z-30">
+    <div className="w-full flex flex-col">
+      <footer className="bg-[var(--color-bg-deep)] border-t border-[var(--color-border)] pt-20 pb-10 px-6 relative z-30">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-12 gap-12 mb-16">
         
         {/* Brand Section */}
@@ -153,6 +154,75 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
           )}
         </button>
       </div>
-    </footer>
+      </footer>
+
+      {/* Giant Brand Footer Slab */}
+      <section className="w-full relative bg-[var(--color-bg-deep)] py-12 md:py-24 flex justify-center items-center overflow-hidden z-20 border-t border-[var(--color-border)]">
+        
+        {/* Hero-Style Background Grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+          style={{ backgroundImage: "linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
+        ></div>
+
+        {/* Glowing Radial Orb behind text */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[150px] bg-[var(--color-accent)] opacity-20 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <svg className="w-full h-auto max-h-[30vh] relative z-10" viewBox="0 0 1400 180" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            {/* Animated Shimmer Gradient */}
+            <linearGradient id="shimmerGradient" x1="0%" y1="0%" x2="200%" y2="0%">
+              <stop offset="0%" stopColor="var(--color-text)" stopOpacity="0.8" />
+              <stop offset="25%" stopColor="var(--color-accent)" />
+              <stop offset="50%" stopColor="var(--color-text)" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="var(--color-text)" stopOpacity="0.8" />
+              <animate attributeName="x1" values="0%;-200%" dur="5s" repeatCount="indefinite" />
+              <animate attributeName="x2" values="200%;0%" dur="5s" repeatCount="indefinite" />
+            </linearGradient>
+
+            {/* Neon Glow Filter */}
+            <filter id="textGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* Background Glowing Stroke */}
+          <text 
+            x="50%" 
+            y="55%" 
+            dominantBaseline="middle" 
+            textAnchor="middle" 
+            className="font-heading font-black uppercase tracking-tighter"
+            fill="none"
+            stroke="var(--color-accent)"
+            strokeWidth="3"
+            filter="url(#textGlow)"
+            opacity="0.6"
+            fontSize="160"
+            fontWeight="900"
+          >
+            TRUST YOUR SETUP
+          </text>
+
+          {/* Main Animated Text */}
+          <text 
+            x="50%" 
+            y="55%" 
+            dominantBaseline="middle" 
+            textAnchor="middle" 
+            className="font-heading font-black uppercase tracking-tighter"
+            fill="url(#shimmerGradient)"
+            fontSize="160"
+            fontWeight="900"
+          >
+            TRUST YOUR SETUP
+          </text>
+        </svg>
+      </section>
+    </div>
   );
 }

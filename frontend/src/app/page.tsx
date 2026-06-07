@@ -9,6 +9,7 @@ import PatternsSection from "../components/PatternsSection";
 import Footer from "@/components/Footer";
 import VoiceDemoForm from "../components/VoiceDemoForm";
 import PricingSection from "@/components/PricingSection";
+import CTASection from "@/components/CTASection";
 
 const CustomCSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap');
@@ -573,8 +574,6 @@ export default function LandingPage() {
       </section>
 
       {/* SECTION 5 — Alert Types */}
-      {/* SECTION 5 — Alert Types */}
-      {/* SECTION 5 — Alert Types (Bento Grid) */}
       <BentoFeatures />
 
       {/* SECTION 6 — Live Voice Demo */}
@@ -640,21 +639,7 @@ export default function LandingPage() {
       </section>
 
       {/* SECTION 10 — Final CTA */}
-      <section className="bg-[var(--color-bg-deep)] py-32 relative overflow-hidden flex flex-col items-center justify-center min-h-[500px] z-20">
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" data-speed="-6">
-          <CTACanvasBackground />
-        </div>
-        
-        <div className="relative z-10 text-center px-6 max-w-2xl">
-          <h2 data-speed="-12" className="font-heading font-bold text-[40px] md:text-[56px] text-[var(--color-text)] mb-6 leading-[1.1]">Your setup is forming right now.</h2>
-          <div data-speed="-18" className="flex flex-col items-center">
-            <p className="text-[var(--color-text-muted)] text-[18px] mb-10">SetupAlert is watching.</p>
-            <Link href="/alerts" className="min-h-[52px] inline-flex items-center justify-center bg-[var(--color-accent)] text-[var(--color-btn-text)] px-10 rounded-md text-[18px] font-bold hover:opacity-90 transition-opacity focus-ring outline-none shadow-lg">
-              Create Your First Alert — It's Free
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CTASection />
 
       {/* SECTION 11 — Footer */}
       <Footer toggleTheme={toggleTheme} />
@@ -1091,53 +1076,4 @@ function FaqItem({ question, answer }: { question: string, answer: string }) {
       </div>
     </div>
   );
-}
-
-
-
-function CTACanvasBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
-    
-    let frameId: number;
-    let offset = 0;
-    
-    const draw = () => {
-      if (!canvasRef.current) return;
-      const w = canvasRef.current.width;
-      const h = canvasRef.current.height;
-      ctx.clearRect(0, 0, w, h);
-      
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim() || '#EEEEEE';
-      ctx.fillStyle = ctx.strokeStyle;
-      
-      const spacing = 30;
-      offset = (offset + 0.2) % spacing;
-      
-      for (let x = -spacing; x < w + spacing; x += spacing) {
-        const actualX = x - offset;
-        const bodyHeight = 10 + Math.random() * 40;
-        const wickHeight = bodyHeight + Math.random() * 20;
-        const y = h/2 + Math.sin(x * 0.01) * 50;
-        
-        ctx.beginPath();
-        ctx.moveTo(actualX + 4, y - wickHeight/2);
-        ctx.lineTo(actualX + 4, y + wickHeight/2);
-        ctx.stroke();
-        
-        ctx.fillRect(actualX, y - bodyHeight/2, 8, bodyHeight);
-      }
-      
-      frameId = requestAnimationFrame(draw);
-    };
-    
-    draw();
-    return () => cancelAnimationFrame(frameId);
-  }, []);
-
-  return <canvas ref={canvasRef} width={2000} height={500} className="w-full h-full object-cover" />;
 }
