@@ -113,13 +113,23 @@ export default function VoiceDemoForm() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 w-full max-w-4xl mx-auto">
-      <div className="text-center w-full">
-        <h2 className="font-heading font-bold text-[36px] text-[var(--color-text)] mb-2">Hear What Your Alert Sounds Like</h2>
+    <div className="relative flex flex-col items-center gap-8 w-full max-w-4xl mx-auto bg-[var(--color-bg-deep)] border border-[var(--color-border)] shadow-2xl rounded-3xl p-10 md:p-14 overflow-hidden">
+      
+      {/* Hero-Style Background Grid */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" 
+        style={{ backgroundImage: "linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
+      ></div>
+
+      {/* Subtle Ambient Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[600px] bg-[var(--color-accent)] opacity-[0.03] blur-[80px] rounded-full pointer-events-none z-0"></div>
+
+      <div className="relative z-10 text-center w-full">
+        <h2 className="font-heading font-bold text-[36px] md:text-[42px] tracking-tight text-[var(--color-text)] mb-2">Hear What Your Alert Sounds Like</h2>
         <p className="text-[var(--color-text-muted)] text-[16px] mb-4">No signup required.</p>
       </div>
 
-      <div className="flex flex-wrap md:flex-nowrap justify-center items-center gap-4 w-full">
+      <div className="relative z-10 flex flex-wrap md:flex-nowrap justify-center items-center gap-4 w-full">
         <select
           value={symbol} onChange={e => setSymbol(e.target.value)}
           className="bg-[var(--color-bg-deep)] border border-[var(--color-border)] text-[var(--color-text)] px-4 py-3 rounded-md text-[14px] focus-ring outline-none min-w-[140px]"
@@ -163,25 +173,25 @@ export default function VoiceDemoForm() {
         </div>
       </div>
 
-      <button onClick={playDemo} className="min-h-[52px] inline-flex items-center justify-center gap-2 bg-[var(--color-accent)] text-[var(--color-btn-text)] px-10 rounded-md font-heading font-bold text-[18px] hover:opacity-90 transition-opacity focus-ring outline-none shadow-[0_0_15px_var(--color-accent-glow)]">
+      <button onClick={playDemo} className="relative z-10 min-h-[52px] inline-flex items-center justify-center gap-2 bg-[var(--color-accent)] text-[var(--color-btn-text)] px-10 rounded-md font-heading font-bold text-[18px] hover:opacity-90 hover:-translate-y-1 transition-all duration-300 focus-ring outline-none shadow-[0_10px_30px_rgba(0,173,181,0.3)]">
         ▶ Play Alert
       </button>
 
-      <div className="h-24 flex flex-col items-center justify-center w-full">
+      <div className="relative z-10 h-24 flex flex-col items-center justify-center w-full">
         {isSpeaking ? (
           <div className="flex items-end gap-1.5 h-8 mb-4">
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar"></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar" style={{ animationDelay: '0.1s' }}></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar" style={{ animationDelay: '0.2s' }}></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar" style={{ animationDelay: '0.3s' }}></div>
-            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar" style={{ animationDelay: '0.4s' }}></div>
+            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar shadow-[0_0_10px_var(--color-accent)]"></div>
+            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar shadow-[0_0_10px_var(--color-accent)]" style={{ animationDelay: '0.1s' }}></div>
+            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar shadow-[0_0_10px_var(--color-accent)]" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar shadow-[0_0_10px_var(--color-accent)]" style={{ animationDelay: '0.3s' }}></div>
+            <div className="w-1.5 h-full bg-[var(--color-accent)] rounded-full sound-bar shadow-[0_0_10px_var(--color-accent)]" style={{ animationDelay: '0.4s' }}></div>
           </div>
         ) : (
           <div className="h-12"></div>
         )}
 
         {playedMsg && (
-          <div className="bg-[var(--color-bg-deep)] border border-[var(--color-border)] px-4 py-2 rounded text-[13px] text-[var(--color-text)] animate-in fade-in zoom-in duration-300 text-center">
+          <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] px-4 py-2 rounded text-[14px] text-[var(--color-text)] animate-in fade-in zoom-in duration-300 text-center shadow-lg font-medium">
             "{playedMsg}"
           </div>
         )}

@@ -3,8 +3,12 @@ import React from 'react';
 export default function BentoFeatures() {
   return (
     <section className="bg-[var(--color-bg-deep)] py-24 md:py-32 relative z-20 overflow-hidden">
-      {/* Background glow for immersion */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-[var(--color-accent)] opacity-[0.02] blur-[150px] rounded-[100%] pointer-events-none"></div>
+      {/* Immersive Animated Mesh Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] animate-[spin_60s_linear_infinite]" style={{ opacity: 'var(--ambient-opacity-mesh)', mixBlendMode: 'var(--ambient-blend)' as any, background: 'radial-gradient(circle at 30% 30%, var(--color-accent) 0%, transparent 40%), radial-gradient(circle at 70% 70%, #8b5cf6 0%, transparent 50%), radial-gradient(circle at 20% 80%, #3b82f6 0%, transparent 40%)', filter: 'blur(80px)' }}></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,var(--color-bg-deep)_80%)]"></div>
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
@@ -15,12 +19,12 @@ export default function BentoFeatures() {
         <div className="bento-grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
           
           {/* Card 1: Scalper (Small) */}
-          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-2 bg-[var(--color-bg-card)] rounded-[2rem] border border-[var(--color-border)] p-8 flex flex-col justify-between group hover:border-[var(--color-accent-border)] hover:shadow-[0_8px_30px_rgba(0,173,181,0.1)] transition-all duration-500 relative overflow-hidden">
+          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-2 bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-[2rem] border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-8 flex flex-col justify-between group hover:border-[var(--color-accent-border)] hover:shadow-[0_20px_80px_-15px_var(--hover-shadow-accent)] transition-all duration-500 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-glow)] to-transparent opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 pointer-events-none"></div>
             
             <div className="mb-10 relative z-10 w-full">
               {/* Mini UI: Stopwatch / Fast Execution */}
-              <div className="bg-[var(--color-bg-deep)] rounded-xl border border-[var(--color-border)] p-4 shadow-lg group-hover:scale-105 transition-transform duration-500 origin-left">
+              <div className="bg-[var(--color-bg-deep)]/80 backdrop-blur-md rounded-xl border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-4 group-hover:scale-105 transition-transform duration-500 origin-left">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
@@ -44,7 +48,7 @@ export default function BentoFeatures() {
           </div>
 
           {/* Card 2: Day Trader (Large) */}
-          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-4 bg-[var(--color-bg-card)] rounded-[2rem] border border-[var(--color-border)] p-8 flex flex-col md:flex-row justify-between items-start md:items-end group hover:border-[var(--color-accent-border)] hover:shadow-[0_8px_30px_rgba(0,173,181,0.1)] transition-all duration-500 relative overflow-hidden">
+          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-4 bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-[2rem] border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-8 flex flex-col md:flex-row justify-between items-start md:items-end group hover:border-[var(--color-accent-border)] hover:shadow-[0_20px_80px_-15px_var(--hover-shadow-accent)] transition-all duration-500 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-bl from-[var(--color-accent-glow)] to-transparent opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 pointer-events-none"></div>
 
             <div className="relative z-10 order-2 md:order-1 max-w-sm mt-10 md:mt-0">
@@ -55,7 +59,7 @@ export default function BentoFeatures() {
 
             <div className="relative z-10 order-1 md:order-2 w-full md:w-auto flex justify-start md:justify-end">
               {/* Mini UI: Chart Setup */}
-              <div className="bg-[var(--color-bg-deep)] rounded-xl border border-[var(--color-border)] p-5 shadow-lg group-hover:-translate-y-2 transition-transform duration-500">
+              <div className="bg-[var(--color-bg-deep)]/80 backdrop-blur-md rounded-xl border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-5 group-hover:-translate-y-2 transition-transform duration-500">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-[var(--color-bg-deep)] px-3 py-1.5 rounded text-[12px] font-medium text-[var(--color-text)] border border-[var(--color-border)] shadow-inner">15m</div>
                   <div className="bg-[var(--color-accent-glow)] px-3 py-1.5 rounded text-[12px] font-bold text-[var(--color-accent)] border border-[var(--color-accent-border)] shadow-[0_0_10px_rgba(0,173,181,0.2)]">Bullish Engulfing</div>
@@ -72,7 +76,7 @@ export default function BentoFeatures() {
           </div>
 
           {/* Card 3: Swing Trader (Large) */}
-          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-4 bg-[var(--color-bg-card)] rounded-[2rem] border border-[var(--color-border)] p-8 flex flex-col md:flex-row justify-between items-start md:items-end group hover:border-[var(--color-accent-border)] hover:shadow-[0_8px_30px_rgba(0,173,181,0.1)] transition-all duration-500 relative overflow-hidden">
+          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-4 bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-[2rem] border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-8 flex flex-col md:flex-row justify-between items-start md:items-end group hover:border-[var(--color-accent-border)] hover:shadow-[0_20px_80px_-15px_var(--hover-shadow-accent)] transition-all duration-500 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-accent-glow)] to-transparent opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 pointer-events-none"></div>
 
             <div className="relative z-10 order-2 md:order-1 max-w-sm mt-10 md:mt-0">
@@ -83,7 +87,7 @@ export default function BentoFeatures() {
 
             <div className="relative z-10 order-1 md:order-2 w-full md:w-auto flex justify-start md:justify-end">
               {/* Mini UI: Supply Zone */}
-              <div className="bg-[var(--color-bg-deep)] rounded-xl border border-[var(--color-border)] p-5 shadow-lg group-hover:scale-105 transition-transform duration-500 origin-right relative overflow-hidden w-full max-w-[200px]">
+              <div className="bg-[var(--color-bg-deep)]/80 backdrop-blur-md rounded-xl border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-5 group-hover:scale-105 transition-transform duration-500 origin-right relative overflow-hidden w-full max-w-[200px]">
                 <div className="text-[10px] text-[var(--color-text-faint)] font-bold tracking-wider uppercase mb-4 flex justify-between"><span>Daily (D1)</span><span>Zone Alert</span></div>
                 <div className="relative h-20 w-full">
                   {/* Demand Zone Rectangle */}
@@ -99,12 +103,12 @@ export default function BentoFeatures() {
           </div>
 
           {/* Card 4: Positional Trader (Small) */}
-          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-2 bg-[var(--color-bg-card)] rounded-[2rem] border border-[var(--color-border)] p-8 flex flex-col justify-between group hover:border-[var(--color-accent-border)] hover:shadow-[0_8px_30px_rgba(0,173,181,0.1)] transition-all duration-500 relative overflow-hidden">
+          <div className="bento-card col-span-1 md:col-span-1 lg:col-span-2 bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-[2rem] border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-8 flex flex-col justify-between group hover:border-[var(--color-accent-border)] hover:shadow-[0_20px_80px_-15px_var(--hover-shadow-accent)] transition-all duration-500 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tl from-[var(--color-accent-glow)] to-transparent opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 pointer-events-none"></div>
 
             <div className="mb-10 relative z-10 w-full">
               {/* Mini UI: Macro Structure */}
-              <div className="bg-[var(--color-bg-deep)] rounded-xl border border-[var(--color-border)] p-4 shadow-lg group-hover:-translate-y-2 transition-transform duration-500">
+              <div className="bg-[var(--color-bg-deep)]/80 backdrop-blur-md rounded-xl border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-4 group-hover:-translate-y-2 transition-transform duration-500">
                 <div className="flex gap-2 justify-center mb-4">
                   <div className="w-8 h-8 rounded bg-[var(--color-bg-deep)] border border-[var(--color-border)] flex items-center justify-center text-[12px] font-bold text-[var(--color-text-faint)]">1D</div>
                   <div className="w-8 h-8 rounded bg-[var(--color-accent-glow)] border border-[var(--color-accent)] flex items-center justify-center text-[12px] font-bold text-[var(--color-accent)] shadow-[0_0_10px_rgba(0,173,181,0.2)]">1W</div>
@@ -125,7 +129,7 @@ export default function BentoFeatures() {
           </div>
 
           {/* Card 5: Investor (Full Width Bottom) */}
-          <div className="bento-card col-span-1 md:col-span-2 lg:col-span-6 bg-[var(--color-bg-card)] rounded-[2rem] border border-[var(--color-border)] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between group hover:border-[var(--color-accent-border)] hover:shadow-[0_8px_40px_rgba(0,173,181,0.15)] transition-all duration-500 relative overflow-hidden">
+          <div className="bento-card col-span-1 md:col-span-2 lg:col-span-6 bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-[2rem] border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between group hover:border-[var(--color-accent-border)] hover:shadow-[0_20px_80px_-15px_var(--hover-shadow-accent)] transition-all duration-500 relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--color-accent-glow)_0%,_transparent_70%)] opacity-0 group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none"></div>
             
             <div className="relative z-10 md:w-1/2 pr-0 md:pr-12 text-center md:text-left mb-10 md:mb-0">
@@ -138,7 +142,7 @@ export default function BentoFeatures() {
 
             <div className="relative z-10 md:w-1/2 w-full flex justify-center md:justify-end">
               {/* Mini UI: Infinite Timeline */}
-              <div className="bg-[var(--color-bg-deep)] rounded-2xl border border-[var(--color-border)] p-6 md:p-8 shadow-2xl w-full max-w-md group-hover:scale-105 transition-transform duration-700 relative overflow-hidden">
+              <div className="bg-[var(--color-bg-deep)]/80 backdrop-blur-md rounded-2xl border border-[var(--color-border)] shadow-[inset_0_1px_1px_var(--glass-inner-border)] p-6 md:p-8 w-full max-w-md group-hover:scale-105 transition-transform duration-700 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent)] opacity-[0.05] blur-[40px] rounded-full"></div>
                 <div className="flex items-center justify-between mb-8 relative z-10">
                   <div className="flex items-center gap-3">

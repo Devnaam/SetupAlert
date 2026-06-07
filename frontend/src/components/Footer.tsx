@@ -10,6 +10,22 @@ interface FooterProps {
 export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps) {
   const [localTheme, setLocalTheme] = useState("dark");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+  
+  const phrases = ["TRUST YOUR SETUP", "TRADE YOUR PLAN", "STAY DISCIPLINED"];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setPhraseIndex((prev) => (prev + 1) % phrases.length);
+        setIsFading(false);
+      }, 600); // Wait for fade out to complete before changing text
+    }, 4000); // Total cycle time
+    
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Sync local state with document attribute on mount
@@ -30,10 +46,10 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
   return (
     <div className="w-full flex flex-col">
       <footer className="bg-[var(--color-bg-deep)] border-t border-[var(--color-border)] pt-20 pb-10 px-6 relative z-30">
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-12 gap-12 mb-16">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 xl:gap-12 mb-16">
         
         {/* Brand Section */}
-        <div className="col-span-2 md:col-span-4 lg:col-span-5 pr-0 md:pr-8">
+        <div className="col-span-1 sm:col-span-2 lg:col-span-4 xl:col-span-5 lg:pr-4">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -60,7 +76,7 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
         </div>
         
         {/* Links Columns */}
-        <div className="col-span-1 md:col-span-2 lg:col-span-2">
+        <div className="col-span-1 sm:col-span-1 lg:col-span-2">
           <h4 className="font-heading font-bold text-[15px] text-[var(--color-text)] mb-6 uppercase tracking-wider">Product</h4>
           <ul className="space-y-4">
             <li><Link href="/#features" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors focus-ring outline-none rounded-sm">Features</Link></li>
@@ -70,7 +86,7 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
           </ul>
         </div>
         
-        <div className="col-span-1 md:col-span-3 lg:col-span-2">
+        <div className="col-span-1 sm:col-span-1 lg:col-span-2">
           <h4 className="font-heading font-bold text-[15px] text-[var(--color-text)] mb-6 uppercase tracking-wider">Resources</h4>
           <ul className="space-y-4">
             <li><a href="#" className="text-[14px] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors focus-ring outline-none rounded-sm">Help Center</a></li>
@@ -80,13 +96,13 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
           </ul>
         </div>
         
-        <div className="col-span-2 md:col-span-3 lg:col-span-3 lg:pl-6">
+        <div className="col-span-1 sm:col-span-2 lg:col-span-4 xl:col-span-3">
           <h4 className="font-heading font-bold text-[15px] text-[var(--color-text)] mb-6 uppercase tracking-wider">Stay Updated</h4>
           <p className="text-[14px] text-[var(--color-text-muted)] mb-4">
             Get the latest trading setups and platform updates straight to your inbox.
           </p>
           <form 
-            className="flex flex-col sm:flex-row gap-2" 
+            className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 w-full" 
             onSubmit={(e) => {
               e.preventDefault();
               setIsSubscribed(true);
@@ -157,69 +173,63 @@ export default function Footer({ toggleTheme: externalToggleTheme }: FooterProps
       </footer>
 
       {/* Giant Brand Footer Slab */}
-      <section className="w-full relative bg-[var(--color-bg-deep)] py-12 md:py-24 flex justify-center items-center overflow-hidden z-20 border-t border-[var(--color-border)]">
+      <section className="w-full bg-[var(--color-bg-deep)] pt-16 pb-0 flex justify-center items-end overflow-hidden z-20">
         
-        {/* Hero-Style Background Grid */}
-        <div 
-          className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-          style={{ backgroundImage: "linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
-        ></div>
-
-        {/* Glowing Radial Orb behind text */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[150px] bg-[var(--color-accent)] opacity-20 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <svg className="w-full h-auto max-h-[30vh] relative z-10" viewBox="0 0 1400 180" preserveAspectRatio="xMidYMid meet">
+        <svg className="w-full h-auto max-h-[25vh] block select-none pointer-events-none" viewBox="0 0 1400 160" preserveAspectRatio="xMidYMax meet">
           <defs>
-            {/* Animated Shimmer Gradient */}
-            <linearGradient id="shimmerGradient" x1="0%" y1="0%" x2="200%" y2="0%">
-              <stop offset="0%" stopColor="var(--color-text)" stopOpacity="0.8" />
-              <stop offset="25%" stopColor="var(--color-accent)" />
-              <stop offset="50%" stopColor="var(--color-text)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="var(--color-text)" stopOpacity="0.8" />
-              <animate attributeName="x1" values="0%;-200%" dur="5s" repeatCount="indefinite" />
-              <animate attributeName="x2" values="200%;0%" dur="5s" repeatCount="indefinite" />
+            <linearGradient id="textFadeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="var(--color-text)" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="var(--color-text)" stopOpacity="0" />
             </linearGradient>
 
-            {/* Neon Glow Filter */}
-            <filter id="textGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+            <linearGradient id="lightSweep" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="var(--color-text)" stopOpacity="0" />
+              <stop offset="40%" stopColor="var(--color-text)" stopOpacity="0" />
+              <stop offset="50%" stopColor="var(--color-text)" stopOpacity="0.35" />
+              <stop offset="60%" stopColor="var(--color-text)" stopOpacity="0" />
+              <stop offset="100%" stopColor="var(--color-text)" stopOpacity="0" />
+              <animateTransform 
+                attributeName="gradientTransform" 
+                type="translate" 
+                values="-1 0; 1 0" 
+                dur="4s" 
+                repeatCount="indefinite" 
+              />
+            </linearGradient>
           </defs>
 
-          {/* Background Glowing Stroke */}
+          {/* Base Watermark Text */}
           <text 
             x="50%" 
-            y="55%" 
-            dominantBaseline="middle" 
+            y="150" 
             textAnchor="middle" 
             className="font-heading font-black uppercase tracking-tighter"
-            fill="none"
-            stroke="var(--color-accent)"
-            strokeWidth="3"
-            filter="url(#textGlow)"
-            opacity="0.6"
-            fontSize="160"
+            fill="url(#textFadeGradient)"
+            fontSize="170"
             fontWeight="900"
+            style={{ 
+              opacity: isFading ? 0 : 1, 
+              transition: "opacity 0.6s ease-in-out" 
+            }}
           >
-            TRUST YOUR SETUP
+            {phrases[phraseIndex]}
           </text>
 
-          {/* Main Animated Text */}
+          {/* Light Sweep Text Layer */}
           <text 
             x="50%" 
-            y="55%" 
-            dominantBaseline="middle" 
+            y="150" 
             textAnchor="middle" 
             className="font-heading font-black uppercase tracking-tighter"
-            fill="url(#shimmerGradient)"
-            fontSize="160"
+            fill="url(#lightSweep)"
+            fontSize="170"
             fontWeight="900"
+            style={{ 
+              opacity: isFading ? 0 : 1, 
+              transition: "opacity 0.6s ease-in-out" 
+            }}
           >
-            TRUST YOUR SETUP
+            {phrases[phraseIndex]}
           </text>
         </svg>
       </section>

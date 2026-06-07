@@ -40,6 +40,9 @@ export default function CTASection() {
   return (
     <section ref={sectionRef} className="bg-[var(--color-bg-deep)] py-32 relative overflow-hidden flex flex-col items-center justify-center min-h-[500px] z-20">
       
+      {/* Subtle tint overlay to differentiate from footer */}
+      <div className="absolute inset-0 bg-[var(--color-text)] opacity-[0.03] pointer-events-none"></div>
+
       {/* Scroll-Driven Typography Parallax Background */}
       <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-center opacity-[0.03] select-none overflow-hidden">
         <div 

@@ -26,20 +26,46 @@ const CustomCSS = `
   --color-accent-glow: rgba(0,173,181,0.15);
   --color-accent-border: rgba(0,173,181,0.3);
   --color-btn-text: #222831;
+
+  --color-nav-bg: rgba(34, 40, 49, 0.85);
+  --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --hero-glow-1: rgba(0, 173, 181, 0.05);
+  --hero-glow-2: rgba(0, 173, 181, 0.0);
+  
+  --ambient-blend: screen;
+  --ambient-opacity-1: 0.03;
+  --ambient-opacity-2: 0.02;
+  --ambient-opacity-mesh: 0.03;
+  --glass-inner-border: rgba(255,255,255,0.05);
+  --hiw-grid-opacity: 0.3;
+  --hover-shadow-accent: rgba(0, 173, 181, 0.25);
 }
 
 [data-theme="light"] {
-  --color-bg-deep: #EEEEEE;
+  --color-bg-deep: #F8FAFC;
   --color-bg-card: #FFFFFF;
   --color-accent: #00ADB5;
-  --color-text: #222831;
+  --color-text: #0F172A;
   
-  --color-text-muted: rgba(34,40,49,0.5);
-  --color-text-faint: rgba(34,40,49,0.25);
-  --color-border: rgba(34,40,49,0.15);
+  --color-text-muted: #475569;
+  --color-text-faint: #94A3B8;
+  --color-border: rgba(15, 23, 42, 0.08);
   --color-accent-glow: rgba(0,173,181,0.15);
   --color-accent-border: rgba(0,173,181,0.3);
-  --color-btn-text: #EEEEEE;
+  --color-btn-text: #F8FAFC;
+
+  --color-nav-bg: rgba(255, 255, 255, 0.75);
+  --shadow-premium: 0 20px 40px -10px rgba(15, 23, 42, 0.1), 0 10px 20px -5px rgba(15, 23, 42, 0.05);
+  --hero-glow-1: rgba(0, 173, 181, 0.12);
+  --hero-glow-2: rgba(56, 189, 248, 0.1);
+
+  --ambient-blend: multiply;
+  --ambient-opacity-1: 0.08;
+  --ambient-opacity-2: 0.05;
+  --ambient-opacity-mesh: 0.08;
+  --glass-inner-border: rgba(0,0,0,0.05);
+  --hiw-grid-opacity: 0.04;
+  --hover-shadow-accent: rgba(0, 173, 181, 0.15);
 }
 
 body {
@@ -116,6 +142,14 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(250%); }
+}
+.animate-shimmer {
+  animation: shimmer-sweep 2.5s infinite linear;
 }
 `;
 
@@ -342,7 +376,7 @@ export default function LandingPage() {
       {/* SECTION 1 — Navbar */}
       <nav
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-          isScrolled ? "bg-[var(--color-bg-deep)]/80 backdrop-blur-md border-b border-[var(--color-border)]" : "bg-transparent"
+          isScrolled ? "bg-[var(--color-nav-bg)] backdrop-blur-xl border-b border-[var(--color-border)]" : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
@@ -353,10 +387,103 @@ export default function LandingPage() {
             <span className="font-heading font-bold text-[20px] text-[var(--color-text)] tracking-tight">SetupAlert</span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             <a href="#how-it-works" className="text-[14px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Features</a>
             <a href="#patterns" className="text-[14px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Patterns</a>
             <a href="#pricing" className="text-[14px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">Pricing</a>
+            
+            {/* Resources Dropdown */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-text-muted)] group-hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm py-2">
+                Resources
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-300 group-hover:rotate-180"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              
+              {/* Invisible hover bridge to prevent menu from closing when mouse moves down */}
+              <div className="absolute top-[100%] left-0 w-full h-4"></div>
+
+              <div className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[650px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                <div 
+                  className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-3 grid grid-cols-2 gap-2 relative overflow-hidden"
+                  style={{ boxShadow: 'var(--shadow-premium)' }}
+                >
+                  
+                  {/* Item 1 */}
+                  <div className="flex flex-col p-4 rounded-xl hover:bg-[var(--color-bg-deep)] transition-colors group/item cursor-default border border-transparent hover:border-[var(--color-border)]">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-bold text-[var(--color-text)] text-[15px]">Blog</span>
+                      <div className="relative overflow-hidden bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-[var(--color-accent)]/20">
+                        Upcoming
+                        <div className="absolute top-0 bottom-0 left-0 w-[40px] bg-gradient-to-r from-transparent via-white to-transparent opacity-[0.25] animate-shimmer"></div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">Helping you become a better trader!</p>
+                  </div>
+
+                  {/* Item 2 */}
+                  <div className="flex flex-col p-4 rounded-xl hover:bg-[var(--color-bg-deep)] transition-colors group/item cursor-default border border-transparent hover:border-[var(--color-border)]">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-bold text-[var(--color-text)] text-[15px]">Strategies</span>
+                      <div className="relative overflow-hidden bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-[var(--color-accent)]/20">
+                        Upcoming
+                        <div className="absolute top-0 bottom-0 left-0 w-[40px] bg-gradient-to-r from-transparent via-white to-transparent opacity-[0.25] animate-shimmer" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">Jumpstart profitability with ready-made strategies.</p>
+                  </div>
+
+                  {/* Item 3 */}
+                  <div className="flex flex-col p-4 rounded-xl hover:bg-[var(--color-bg-deep)] transition-colors group/item cursor-default border border-transparent hover:border-[var(--color-border)]">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-bold text-[var(--color-text)] text-[15px]">Changelog</span>
+                      <div className="relative overflow-hidden bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-[var(--color-accent)]/20">
+                        Upcoming
+                        <div className="absolute top-0 bottom-0 left-0 w-[40px] bg-gradient-to-r from-transparent via-white to-transparent opacity-[0.25] animate-shimmer" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">Discover what's new in SetupAlert.</p>
+                  </div>
+
+                  {/* Item 4 */}
+                  <div className="flex flex-col p-4 rounded-xl hover:bg-[var(--color-bg-deep)] transition-colors group/item cursor-default border border-transparent hover:border-[var(--color-border)]">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-bold text-[var(--color-text)] text-[15px]">Knowledge Base</span>
+                      <div className="relative overflow-hidden bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-[var(--color-accent)]/20">
+                        Upcoming
+                        <div className="absolute top-0 bottom-0 left-0 w-[40px] bg-gradient-to-r from-transparent via-white to-transparent opacity-[0.25] animate-shimmer" style={{ animationDelay: '0.6s' }}></div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">Need help with something? Find answers here.</p>
+                  </div>
+
+                  {/* Item 5 */}
+                  <div className="flex flex-col p-4 rounded-xl hover:bg-[var(--color-bg-deep)] transition-colors group/item cursor-default border border-transparent hover:border-[var(--color-border)]">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-bold text-[var(--color-text)] text-[15px]">Community</span>
+                      <div className="relative overflow-hidden bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-[var(--color-accent)]/20">
+                        Upcoming
+                        <div className="absolute top-0 bottom-0 left-0 w-[40px] bg-gradient-to-r from-transparent via-white to-transparent opacity-[0.25] animate-shimmer" style={{ animationDelay: '0.8s' }}></div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">Connect, learn, and grow with like-minded traders.</p>
+                  </div>
+
+                  {/* Item 6 */}
+                  <div className="flex flex-col p-4 rounded-xl hover:bg-[var(--color-bg-deep)] transition-colors group/item cursor-default border border-transparent hover:border-[var(--color-border)]">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-bold text-[var(--color-text)] text-[15px]">Free Trading Tools</span>
+                      <div className="relative overflow-hidden bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-[var(--color-accent)]/20">
+                        Upcoming
+                        <div className="absolute top-0 bottom-0 left-0 w-[40px] bg-gradient-to-r from-transparent via-white to-transparent opacity-[0.25] animate-shimmer" style={{ animationDelay: '1.0s' }}></div>
+                      </div>
+                    </div>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">Level up your trading math.</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
             <a href="#faq" className="text-[14px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors focus-ring outline-none rounded-sm">FAQ</a>
           </div>
 
@@ -396,11 +523,20 @@ export default function LandingPage() {
 
       {/* SECTION 2 — Hero */}
       <section className="relative w-full pt-[120px] pb-16 md:pt-[180px] md:pb-32 overflow-hidden min-h-screen flex items-center">
-        {/* Faint hero background grid layer */}
+        {/* Ambient Light Mode Glows (Controlled by CSS Variables) */}
+        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[120px] pointer-events-none z-0" style={{ backgroundColor: 'var(--hero-glow-1)' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 translate-x-1/4 translate-y-1/4 w-[600px] h-[600px] rounded-full blur-[100px] pointer-events-none z-0" style={{ backgroundColor: 'var(--hero-glow-2)' }}></div>
+
+        {/* Dynamic hero background grid layer with cinematic radial fade mask */}
         <div 
-          className="absolute inset-0 opacity-[0.03] z-0" 
+          className="absolute inset-0 z-0 opacity-100" 
           data-speed="-5"
-          style={{ backgroundImage: "linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px)", backgroundSize: "40px 40px" }}
+          style={{ 
+            backgroundImage: "linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)", 
+            backgroundSize: "40px 40px",
+            maskImage: "radial-gradient(circle at 50% 50%, black 20%, transparent 80%)",
+            WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 20%, transparent 80%)"
+          }}
         ></div>
         
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16 relative z-10">
@@ -455,7 +591,16 @@ export default function LandingPage() {
 
       {/* SECTION 4 — How It Works (Pinned Parallax) */}
       <section id="how-it-works" className="w-full bg-[var(--color-bg-deep)] relative z-20">
-        <div className="hiw-pinned-container w-full h-[100vh] flex items-center justify-center overflow-hidden relative">
+        {/* Immersive Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[var(--color-accent)] blur-[120px] rounded-full animate-pulse" style={{ opacity: 'var(--ambient-opacity-1)', mixBlendMode: 'var(--ambient-blend)' as any }}></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-purple-500 blur-[150px] rounded-full animate-pulse" style={{ animationDelay: '2s', opacity: 'var(--ambient-opacity-2)', mixBlendMode: 'var(--ambient-blend)' as any }}></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--color-bg-deep)_100%)] opacity-90"></div>
+          {/* Subtle Grid overlay */}
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(var(--color-text-muted) 1px, transparent 1px)', backgroundSize: '32px 32px', opacity: 'var(--hiw-grid-opacity)' }}></div>
+        </div>
+
+        <div className="hiw-pinned-container w-full h-[100vh] flex items-center justify-center overflow-hidden relative z-10">
           <div className="max-w-7xl mx-auto px-6 w-full h-full flex flex-col pt-24 pb-12 relative">
             <h2 className="font-heading font-bold text-[36px] md:text-[48px] text-[var(--color-text)] text-center absolute top-24 left-0 w-full z-30">How It Works</h2>
             
@@ -498,7 +643,7 @@ export default function LandingPage() {
               <div className="flex-1 w-full h-[300px] md:h-[400px] relative">
                 {/* Visual 1 */}
                 <div className="hiw-visual hiw-visual-1">
-                  <div className="w-full bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] p-8 shadow-2xl relative overflow-hidden">
+                  <div className="w-full bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-xl border border-[var(--color-border)] p-8 shadow-[0_20px_60px_-15px_var(--color-accent-glow),inset_0_1px_1px_var(--glass-inner-border)] relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-bg-deep)] opacity-80"></div>
                     <div className="absolute inset-0 bg-[var(--color-bg-deep)] opacity-20 -z-10" data-speed="-10"></div>
                     <div className="flex flex-col gap-4 relative z-10" data-speed="-20">
@@ -512,33 +657,145 @@ export default function LandingPage() {
 
                 {/* Visual 2 */}
                 <div className="hiw-visual hiw-visual-2">
-                  <div className="w-full h-full min-h-[250px] bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] p-12 shadow-2xl flex justify-center items-center gap-4 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[var(--color-bg-deep)] opacity-20 -z-10" data-speed="-10"></div>
+                  <div className="w-full h-auto bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-xl border border-[var(--color-border)] p-6 shadow-[0_20px_60px_-15px_var(--color-accent-glow),inset_0_1px_1px_var(--glass-inner-border)] relative overflow-hidden group flex flex-col justify-center">
+                    <div className="absolute inset-0 bg-[var(--color-bg-deep)] opacity-30 -z-10" style={{ backgroundImage: 'linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                     
+                    {/* Header */}
+                    <div className="flex justify-between items-center border-b border-[var(--color-border)] pb-3 mb-4 relative z-10 w-full">
+                       <div className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+                          <span className="text-[11px] text-[var(--color-text)] font-bold tracking-[0.2em] uppercase">Engine Active 24/7</span>
+                       </div>
+                       <span className="text-[11px] text-[var(--color-text-faint)] font-mono tracking-widest hidden sm:block">SCANNING YOUR SETUPS</span>
+                    </div>
+
+                    <div className="flex flex-col gap-3 relative z-10 w-full" data-speed="-15">
+                       {/* Scanner Line that moves up and down */}
+                       <div className="absolute top-0 left-0 right-0 h-[60px] bg-gradient-to-b from-transparent via-[var(--color-accent)] to-transparent opacity-10 animate-[scanVertical_3s_ease-in-out_infinite_alternate] pointer-events-none z-20"></div>
+                       <div className="absolute top-0 left-0 right-0 h-[1px] bg-[var(--color-accent)] opacity-40 animate-[scanVerticalLine_3s_ease-in-out_infinite_alternate] pointer-events-none z-20 shadow-[0_0_15px_var(--color-accent)]"></div>
+
+                       {/* Setup 1: Inside Bar Setup */}
+                       <div className="w-full bg-[var(--color-bg-deep)]/70 backdrop-blur-md shadow-[inset_0_1px_1px_var(--glass-inner-border)] border border-[var(--color-border)] rounded-lg p-3 flex justify-between items-center relative overflow-hidden animate-[detect1_9s_infinite]">
+                          <div className="flex items-center gap-3 relative z-10">
+                            <div className="w-8 h-8 rounded bg-[var(--color-bg-card)] flex items-center justify-center font-bold text-[10px] text-[var(--color-text)] border border-[var(--color-border)]">BTC</div>
+                            <div className="flex flex-col">
+                              <span className="text-[13px] font-bold text-[var(--color-text)]">Inside Bar Setup</span>
+                              <span className="text-[10px] text-[var(--color-text-faint)] font-mono">15m Timeframe</span>
+                            </div>
+                          </div>
+                          <div className="relative z-10 flex items-center gap-2">
+                             <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-text-faint)] animate-[statusDot1_9s_infinite]"></div>
+                             <span className="text-[10px] font-bold tracking-wider status-text-1"></span>
+                          </div>
+                          <div className="absolute inset-0 bg-[var(--color-accent-glow)] animate-[bgPulse1_9s_infinite] z-0"></div>
+                       </div>
+
+                       {/* Setup 2: Breakout Trading */}
+                       <div className="w-full bg-[var(--color-bg-deep)]/70 backdrop-blur-md shadow-[inset_0_1px_1px_var(--glass-inner-border)] border border-[var(--color-border)] rounded-lg p-3 flex justify-between items-center relative overflow-hidden animate-[detect2_9s_infinite]">
+                          <div className="flex items-center gap-3 relative z-10">
+                            <div className="w-8 h-8 rounded bg-[var(--color-bg-card)] flex items-center justify-center font-bold text-[10px] text-[var(--color-text)] border border-[var(--color-border)]">ETH</div>
+                            <div className="flex flex-col">
+                              <span className="text-[13px] font-bold text-[var(--color-text)]">Breakout Trading</span>
+                              <span className="text-[10px] text-[var(--color-text-faint)] font-mono">1H Timeframe</span>
+                            </div>
+                          </div>
+                          <div className="relative z-10 flex items-center gap-2">
+                             <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-text-faint)] animate-[statusDot2_9s_infinite]"></div>
+                             <span className="text-[10px] font-bold tracking-wider status-text-2"></span>
+                          </div>
+                          <div className="absolute inset-0 bg-[var(--color-accent-glow)] animate-[bgPulse2_9s_infinite] z-0"></div>
+                       </div>
+
+                       {/* Setup 3: Pin Bar Hammer */}
+                       <div className="w-full bg-[var(--color-bg-deep)]/70 backdrop-blur-md shadow-[inset_0_1px_1px_var(--glass-inner-border)] border border-[var(--color-border)] rounded-lg p-3 flex justify-between items-center relative overflow-hidden animate-[detect3_9s_infinite]">
+                          <div className="flex items-center gap-3 relative z-10">
+                            <div className="w-8 h-8 rounded bg-[var(--color-bg-card)] flex items-center justify-center font-bold text-[10px] text-[var(--color-text)] border border-[var(--color-border)]">SOL</div>
+                            <div className="flex flex-col">
+                              <span className="text-[13px] font-bold text-[var(--color-text)]">Pin Bar Hammer</span>
+                              <span className="text-[10px] text-[var(--color-text-faint)] font-mono">4H Timeframe</span>
+                            </div>
+                          </div>
+                          <div className="relative z-10 flex items-center gap-2">
+                             <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-text-faint)] animate-[statusDot3_9s_infinite]"></div>
+                             <span className="text-[10px] font-bold tracking-wider status-text-3"></span>
+                          </div>
+                          <div className="absolute inset-0 bg-[var(--color-accent-glow)] animate-[bgPulse3_9s_infinite] z-0"></div>
+                       </div>
+                    </div>
+
                     <style dangerouslySetInnerHTML={{__html: `
-                      @keyframes scanSweep {
-                        0% { transform: translateX(-150px); }
-                        100% { transform: translateX(500px); }
+                      @keyframes scanVertical {
+                        0% { transform: translateY(-30px); }
+                        100% { transform: translateY(220px); }
+                      }
+                      @keyframes scanVerticalLine {
+                        0% { transform: translateY(0px); }
+                        100% { transform: translateY(190px); }
+                      }
+
+                      /* Box 1 Animation */
+                      @keyframes detect1 {
+                        0%, 5%, 25%, 100% { border-color: var(--color-border); transform: scale(1); box-shadow: none; }
+                        10%, 20% { border-color: var(--color-accent); transform: scale(1.02); box-shadow: 0 0 20px var(--color-accent-glow); z-index: 30; }
+                      }
+                      @keyframes bgPulse1 {
+                        0%, 5%, 25%, 100% { opacity: 0; }
+                        10%, 20% { opacity: 1; }
+                      }
+                      @keyframes statusDot1 {
+                        0%, 5%, 25%, 100% { background-color: var(--color-text-faint); box-shadow: none; }
+                        10%, 20% { background-color: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); }
+                      }
+                      .status-text-1::after {
+                        content: "MONITORING"; color: var(--color-text-faint); animation: statusText1 9s infinite;
+                      }
+                      @keyframes statusText1 {
+                        0%, 5%, 25%, 100% { content: "MONITORING"; color: var(--color-text-faint); }
+                        10%, 20% { content: "DETECTED!"; color: var(--color-accent); }
+                      }
+
+                      /* Box 2 Animation */
+                      @keyframes detect2 {
+                        0%, 40%, 60%, 100% { border-color: var(--color-border); transform: scale(1); box-shadow: none; }
+                        45%, 55% { border-color: var(--color-accent); transform: scale(1.02); box-shadow: 0 0 20px var(--color-accent-glow); z-index: 30; }
+                      }
+                      @keyframes bgPulse2 {
+                        0%, 40%, 60%, 100% { opacity: 0; }
+                        45%, 55% { opacity: 1; }
+                      }
+                      @keyframes statusDot2 {
+                        0%, 40%, 60%, 100% { background-color: var(--color-text-faint); box-shadow: none; }
+                        45%, 55% { background-color: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); }
+                      }
+                      .status-text-2::after {
+                        content: "MONITORING"; color: var(--color-text-faint); animation: statusText2 9s infinite;
+                      }
+                      @keyframes statusText2 {
+                        0%, 40%, 60%, 100% { content: "MONITORING"; color: var(--color-text-faint); }
+                        45%, 55% { content: "DETECTED!"; color: var(--color-accent); }
+                      }
+
+                      /* Box 3 Animation */
+                      @keyframes detect3 {
+                        0%, 75%, 95%, 100% { border-color: var(--color-border); transform: scale(1); box-shadow: none; }
+                        80%, 90% { border-color: var(--color-accent); transform: scale(1.02); box-shadow: 0 0 20px var(--color-accent-glow); z-index: 30; }
+                      }
+                      @keyframes bgPulse3 {
+                        0%, 75%, 95%, 100% { opacity: 0; }
+                        80%, 90% { opacity: 1; }
+                      }
+                      @keyframes statusDot3 {
+                        0%, 75%, 95%, 100% { background-color: var(--color-text-faint); box-shadow: none; }
+                        80%, 90% { background-color: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); }
+                      }
+                      .status-text-3::after {
+                        content: "MONITORING"; color: var(--color-text-faint); animation: statusText3 9s infinite;
+                      }
+                      @keyframes statusText3 {
+                        0%, 75%, 95%, 100% { content: "MONITORING"; color: var(--color-text-faint); }
+                        80%, 90% { content: "DETECTED!"; color: var(--color-accent); }
                       }
                     `}} />
-                    <div className="absolute top-0 bottom-0 w-32 bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent opacity-10 z-20" style={{ animation: 'scanSweep 2.5s infinite linear' }}></div>
-                    <div className="absolute top-0 bottom-0 w-[1px] bg-[var(--color-accent)] opacity-40 z-20 shadow-[0_0_12px_var(--color-accent)]" style={{ animation: 'scanSweep 2.5s infinite linear' }}></div>
-
-                    <div className="flex justify-center items-center gap-4 relative z-10 w-full" data-speed="-20">
-                      <div className="w-8 h-16 border-[1.5px] border-[var(--color-text-faint)] relative">
-                        <div className="absolute top-[-10px] left-1/2 w-px h-6 bg-[var(--color-text-faint)] -translate-x-1/2"></div>
-                        <div className="absolute bottom-[-10px] left-1/2 w-px h-6 bg-[var(--color-text-faint)] -translate-x-1/2"></div>
-                      </div>
-                      <div className="w-8 h-12 border-[1.5px] border-[var(--color-text-faint)] relative">
-                        <div className="absolute top-[-15px] left-1/2 w-px h-6 bg-[var(--color-text-faint)] -translate-x-1/2"></div>
-                        <div className="absolute bottom-[-5px] left-1/2 w-px h-6 bg-[var(--color-text-faint)] -translate-x-1/2"></div>
-                      </div>
-                      <div className="w-8 h-10 border-[1.5px] border-[var(--color-accent)] relative bg-[var(--color-accent-glow)]">
-                        <div className="absolute top-[-5px] left-1/2 w-px h-6 bg-[var(--color-accent)] -translate-x-1/2"></div>
-                        <div className="absolute bottom-[-20px] left-1/2 w-px h-12 bg-[var(--color-accent)] -translate-x-1/2"></div>
-                        <svg className="absolute -top-8 -right-8 w-6 h-6 text-[var(--color-accent)] drop-shadow-[0_0_4px_var(--color-accent)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
@@ -546,7 +803,7 @@ export default function LandingPage() {
                 <div className="hiw-visual hiw-visual-3">
                   <div className="w-full flex flex-col items-center justify-center gap-6 relative">
                     <div className="absolute inset-0 bg-[var(--color-bg-deep)] opacity-20 -z-10" data-speed="-10"></div>
-                    <div className="w-full bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] border-l-[4px] border-l-[var(--color-accent)] p-8 shadow-2xl relative z-10" data-speed="-20">
+                    <div className="w-full bg-[var(--color-bg-card)]/80 backdrop-blur-xl rounded-xl border border-[var(--color-border)] border-l-[4px] border-l-[var(--color-accent)] p-8 shadow-[0_20px_60px_-15px_var(--color-accent-glow),inset_0_1px_1px_var(--glass-inner-border)] relative z-10" data-speed="-20">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="w-8 h-8 rounded-full bg-[var(--color-accent-glow)] flex items-center justify-center text-[var(--color-accent)]">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
